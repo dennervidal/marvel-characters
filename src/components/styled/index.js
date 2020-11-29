@@ -1,0 +1,1 @@
+export { StyledThemeProvider } from "./StyledThemeProvider";

@@ -1,12 +1,14 @@
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
 import React from "react";
+import {
+  Table as MuiTable,
+  TableRow as MuiTRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 import styled from "styled-components";
-import Table from "@material-ui/core/Table";
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -19,7 +21,7 @@ const RowDiv = styled.div`
   align-items: center;
 `;
 
-const StyledTableRow = styled(TableRow)`
+const TableRow = styled(MuiTRow)`
   && {
     background-color: #fff;
     height: ${({ mobile }) => (mobile ? 72 : 88)}px;
@@ -35,14 +37,14 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-const StyledTable = styled(Table)`
+const Table = styled(MuiTable)`
   && {
     border-collapse: separate;
     border-spacing: 0 8px;
   }
 `;
 
-const StyledHeaderCell = styled(TableCell)`
+const HeaderCell = styled(TableCell)`
   && {
     padding: 16px 16px 0 16px;
     border-bottom: unset;
@@ -51,17 +53,17 @@ const StyledHeaderCell = styled(TableCell)`
 
 export const CharactersTable = ({ characters, mobile }) => {
   return (
-    <StyledTable>
+    <Table>
       <TableHead>
-        <TableRow>
-          <StyledHeaderCell key="character">Personagem</StyledHeaderCell>
-          <StyledHeaderCell key="series">Séries</StyledHeaderCell>
-          <StyledHeaderCell key="events">Eventos</StyledHeaderCell>
-        </TableRow>
+        <MuiTRow>
+          <HeaderCell key="character">Personagem</HeaderCell>
+          <HeaderCell key="series">Séries</HeaderCell>
+          <HeaderCell key="events">Eventos</HeaderCell>
+        </MuiTRow>
       </TableHead>
       <TableBody>
         {(characters || []).map(({ name, thumbnail, events, series }, idx) => (
-          <StyledTableRow key={`${name}-${idx}`} mobile={mobile}>
+          <TableRow key={`${name}-${idx}`} mobile={mobile}>
             <TableCell>
               <RowDiv>
                 <Avatar
@@ -89,9 +91,9 @@ export const CharactersTable = ({ characters, mobile }) => {
                 ))}
               </ColumnDiv>
             </TableCell>
-          </StyledTableRow>
+          </TableRow>
         ))}
       </TableBody>
-    </StyledTable>
+    </Table>
   );
 };

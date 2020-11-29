@@ -5,12 +5,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import { IconButton, useMediaQuery } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { useCharactersPaginate } from "../../hooks/useCharactersPaginate";
-import { LoadingPlaceholder } from "../../components/LoadingPlaceholder/LoadingPlaceholder";
-import { PaginationContext } from "../../context/PaginationContext";
-import { CharactersTable } from "../../components/CharactersTable/CharactersTable";
+import { useCharactersPaginate } from "hooks";
+import { LoadingPlaceholder } from "components/LoadingPlaceholder";
+import { PaginationContext } from "context";
+import { CharactersTable } from "components/CharactersTable";
 import { useHistory, useLocation } from "react-router";
-import { routes } from "../../routes/routes";
+import { routes } from "routes";
 import { useTheme } from "@material-ui/styles";
 
 const MainDiv = styled.div`

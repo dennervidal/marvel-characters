@@ -1,0 +1,1 @@
+export { CharactersTable } from "./CharactersTable";

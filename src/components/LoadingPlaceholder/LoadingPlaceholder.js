@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Loading } from "../Loading/Loading";
+import { Loading } from "components/Loading";
 
 const LoadingPlaceholder = ({ children, loading }) => (
   <>

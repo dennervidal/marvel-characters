@@ -1,18 +1,20 @@
 import React, { Suspense } from "react";
 import { useHistory } from "react-router-dom";
 import { useTheme } from "@material-ui/styles";
-import { useMediaQuery } from "@material-ui/core";
+import {
+  useMediaQuery,
+  Typography as MuiTypography,
+  AppBar,
+  Toolbar,
+  Avatar,
+} from "@material-ui/core";
 import styled from "styled-components";
-import { routes } from "../../routes/routes";
-import { RoutesList } from "../../routes/RoutesList/RoutesList";
-import { useWindowSize } from "../../hooks/useWindowSize";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import { Loading } from "../../components/Loading/Loading";
-import { Navigation } from "../../components/Navigation/Navigation";
-import logo from "../../assets/objective-logo.png";
-import Typography from "@material-ui/core/Typography";
-import Avatar from "@material-ui/core/Avatar";
+import { routes } from "routes";
+import { RoutesList } from "routes/RoutesList";
+import { useWindowSize } from "hooks";
+import { Loading } from "components/Loading";
+import { Navigation } from "components/Navigation";
+import logo from "assets/objective-logo.png";
 
 const MainDiv = styled.div`
   display: flex;
@@ -56,7 +58,7 @@ const AppBarRightDiv = styled.div`
   align-items: center;
 `;
 
-const TypographyStyled = styled(Typography)`
+const Typography = styled(MuiTypography)`
   && {
     font-weight: ${({ fontWeight = 400 }) => fontWeight};
     margin-right: ${({ marginRight = 0 }) => marginRight}px;
@@ -82,25 +84,21 @@ const App = () => {
               <LogoImg src={logo} alt="Logo" onClick={onClickImage} />
             </Title>
             <AppBarRightDiv mobile={mobile}>
-              <TypographyStyled
+              <Typography
                 variant="subtitle2"
                 fontWeight={700}
                 marginRight={6}
                 color="textPrimary"
               >
                 Denner Vidal
-              </TypographyStyled>
-              <TypographyStyled
-                variant="body2"
-                marginRight={6}
-                color="textPrimary"
-              >
+              </Typography>
+              <Typography variant="body2" marginRight={6} color="textPrimary">
                 Teste de Front-end
-              </TypographyStyled>
+              </Typography>
               <AvatarStyled variant="rounded">
-                <TypographyStyled variant="caption" fontWeight={700}>
+                <Typography variant="caption" fontWeight={700}>
                   CB
-                </TypographyStyled>
+                </Typography>
               </AvatarStyled>
             </AppBarRightDiv>
           </Toolbar>

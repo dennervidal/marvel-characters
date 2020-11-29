@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MarvelCharactersApiService } from "../service/MarvelCharacterApiService";
+import { MarvelCharactersApiService } from "service";
 
 const PAGE_LIMIT = 4;
 

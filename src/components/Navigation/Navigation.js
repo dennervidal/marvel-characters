@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import styled from "styled-components";
-import { PaginationContext } from "../../context/PaginationContext";
+import { PaginationContext } from "context";
 
 const MainDiv = styled.div`
   display: flex;

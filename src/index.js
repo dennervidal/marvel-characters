@@ -1,14 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import "./index.css";
-import "fontsource-pt-sans-caption";
-import "fontsource-pt-sans";
-import App from "./pages/App/App";
+import App from "./pages/App";
 import { ThemeProvider } from "@material-ui/styles";
+import { StyledThemeProvider } from "components/styled";
+import { PaginationContextProvider } from "context";
 import theme from "./utils/theme";
-import { StyledThemeProvider } from "./components/styled/StyledThemeProvider";
-import { PaginationContextProvider } from "./context/PaginationContextProvider";
+
+import "fontsource-pt-sans";
+import "fontsource-pt-sans-caption";
+import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>

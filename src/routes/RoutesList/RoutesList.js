@@ -7,7 +7,6 @@ import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
 export const RoutesList = () => (
   <ErrorBoundary>
     <Switch>
-      {/*<Redirect exact from="/" to={routes.LIST.path} />*/}
       {Object.values(routes).map(({ path, exact, component: Component }) => (
         <Route key={path} path={path} component={Component} exact={exact} />
       ))}

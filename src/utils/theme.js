@@ -11,6 +11,9 @@ const theme = createMuiTheme({
     background: {
       default: "#e5e5e5",
     },
+    text: {
+      primary: "#555",
+    },
   },
   typography: {
     fontFamily: ["PT Sans", "PT Sans Caption"].join(","),

@@ -33,6 +33,7 @@ const AppContainer = styled.div`
 const LogoImg = styled.img`
   max-height: 28px;
   width: auto;
+  cursor: pointer;
 `;
 
 const Title = styled.div`
@@ -70,9 +71,7 @@ const App = () => {
   const mobile = !useMediaQuery(theme.breakpoints.up("sm"));
   const [, height] = useWindowSize();
 
-  // const onClickSearch = () => routes.ADVANCED_SEARCH.redirect(history);
-  const onClickImage = () => routes.LIST.redirect(history);
-  // const onChange = (event, newValue) => routes[newValue].redirect(history);
+  const onClickImage = () => routes.HOME.redirect(history);
 
   return (
     <MainDiv height={height}>
@@ -87,10 +86,15 @@ const App = () => {
                 variant="subtitle2"
                 fontWeight={700}
                 marginRight={6}
+                color="textPrimary"
               >
                 Denner Vidal
               </TypographyStyled>
-              <TypographyStyled variant="body2" marginRight={6}>
+              <TypographyStyled
+                variant="body2"
+                marginRight={6}
+                color="textPrimary"
+              >
                 Teste de Front-end
               </TypographyStyled>
               <AvatarStyled variant="rounded">

@@ -1,15 +1,17 @@
-import React, { useContext } from "react";
-import { useCharactersPaginate } from "../../hooks/useCharactersPaginate";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import { LoadingPlaceholder } from "../../components/LoadingPlaceholder/LoadingPlaceholder";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import SearchIcon from "@material-ui/icons/Search";
+import TextField from "@material-ui/core/TextField";
+import { IconButton, useMediaQuery } from "@material-ui/core";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import { useCharactersPaginate } from "../../hooks/useCharactersPaginate";
+import { LoadingPlaceholder } from "../../components/LoadingPlaceholder/LoadingPlaceholder";
 import { PaginationContext } from "../../context/PaginationContext";
+import { CharactersTable } from "../../components/CharactersTable/CharactersTable";
+import { useHistory, useLocation } from "react-router";
+import { routes } from "../../routes/routes";
+import { useTheme } from "@material-ui/styles";
 
 const MainDiv = styled.div`
   display: flex;
@@ -18,101 +20,95 @@ const MainDiv = styled.div`
   padding: 0px 24px 0px 24px;
 `;
 
-const ColumnDiv = styled.div`
+const StyledInput = styled(TextField)`
+  && {
+    width: 300px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #fff;
+    border: none;
+    fieldset {
+      border: unset;
+    }
+    margin-top: 8px;
+  }
+`;
+
+const StyledIconButton = styled(IconButton)`
+  && {
+    padding: 4px;
+  }
+`;
+
+const SearchDiv = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 40px;
+  margin-bottom: 24px;
 `;
 
-const RowDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const StyledTableRow = styled(TableRow)`
+const StyledTypography = styled(Typography)`
   && {
-    background-color: #fff;
-    td:first-child {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    td:last-child {
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
-    box-shadow: 0px 0px 5px #00000033;
+    font-weight: ${({ fontWeight = 600 }) => fontWeight};
+    font-size: ${({ fontSize = 16 }) => fontSize}px;
+    font-family: "PT Sans Caption";
   }
 `;
 
-const StyledTable = styled(Table)`
-  && {
-    border-collapse: separate;
-    border-spacing: 0 8px;
-  }
-`;
+export const Home = React.memo(() => {
+  const location = useLocation();
+  const history = useHistory();
+  const theme = useTheme();
+  const params = new URLSearchParams(location.search);
+  const [search, setSearch] = useState(params.get("query") || "");
+  const mobile = !useMediaQuery(theme.breakpoints.up("sm"));
 
-const StyledHeaderCell = styled(TableCell)`
-  && {
-    padding: 16px 16px 0 16px;
-    border-bottom: unset;
-  }
-`;
-
-export const Home = () => {
   const { setTotal, page } = useContext(PaginationContext);
   const { results: characters, loading } = useCharactersPaginate({
+    nameStartsWith: params.get("query"),
     setTotal,
     page,
   });
 
-  console.log(characters);
+  const redirectToSearch = () => routes.SEARCH.redirect(history, search);
+
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      redirectToSearch();
+    }
+  };
 
   return (
     <LoadingPlaceholder loading={loading}>
       <MainDiv>
-        <StyledTable>
-          <TableHead>
-            <TableRow>
-              <StyledHeaderCell key="character">Personagem</StyledHeaderCell>
-              <StyledHeaderCell key="series">Séries</StyledHeaderCell>
-              <StyledHeaderCell key="events">Eventos</StyledHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(characters || []).map(({ name, thumbnail, events, series }) => (
-              <StyledTableRow key={name}>
-                <TableCell>
-                  <RowDiv>
-                    <Avatar
-                      variant="rounded"
-                      src={`${thumbnail.path}.${thumbnail.extension}`}
-                    />
-                    <Typography variant="subtitle2">{name}</Typography>
-                  </RowDiv>
-                </TableCell>
-                <TableCell>
-                  <ColumnDiv>
-                    {(series.items.slice(0, 3) || []).map(({ name }) => (
-                      <Typography key={name} variant="caption">
-                        {name}
-                      </Typography>
-                    ))}
-                  </ColumnDiv>
-                </TableCell>
-                <TableCell>
-                  <ColumnDiv>
-                    {(events.items.slice(0, 3) || []).map(({ name }) => (
-                      <Typography key={name} variant="caption">
-                        {name}
-                      </Typography>
-                    ))}
-                  </ColumnDiv>
-                </TableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </StyledTable>
+        <SearchDiv>
+          <StyledTypography variant="h5" fontSize={32} color="textPrimary">
+            Busca de personagens
+          </StyledTypography>
+          <StyledTypography variant="subtitle2" color="textPrimary">
+            Nome do personagem
+          </StyledTypography>
+          <StyledInput
+            variant="outlined"
+            placeholder="Search"
+            size="small"
+            onKeyDown={onKeyDown}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <StyledIconButton onClick={redirectToSearch}>
+                    <SearchIcon />
+                  </StyledIconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </SearchDiv>
+        <CharactersTable characters={characters} mobile={mobile} />
       </MainDiv>
     </LoadingPlaceholder>
   );
-};
+});

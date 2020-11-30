@@ -5,6 +5,8 @@
 This project uses Marvel API for characters, listing on homepage all available characters
 and provides a search tool for the user, based on character starting name string.
 
+You can access the deployed app [here](https://master.d20kbch1h1r0t5.amplifyapp.com/)
+
 ## getting started
 
 First of all, you will need a Marvel developer account API key from [here](https://developer.marvel.com) 

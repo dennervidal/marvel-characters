@@ -1,4 +1,4 @@
-const ROOT_MARVEL_API_URL = "http://gateway.marvel.com/v1/public";
+const ROOT_MARVEL_API_URL = "https://gateway.marvel.com/v1/public";
 
 const getCharactersList = ({ nameStartsWith, page = 0, limit = 20 }) => {
   let nameParam = "";

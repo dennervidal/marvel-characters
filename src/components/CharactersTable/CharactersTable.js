@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  TableRow as MuiTRow,
-  TableBody,
-  TableHead,
-  Avatar,
-} from "@material-ui/core";
+import { TableRow as MuiTRow, TableBody, TableHead } from "@material-ui/core";
 import {
   Table,
   Typography,
@@ -12,6 +7,7 @@ import {
   TableRow,
   ColumnDiv,
   RowDiv,
+  Avatar,
 } from "./styled";
 import PropTypes from "prop-types";
 import { routes } from "routes";
@@ -25,7 +21,7 @@ export const CharactersTable = ({ characters, mobile, history }) => {
             <Typography
               variant="subtitle2"
               fontSize={12}
-              marginLeft={mobile && 64}
+              marginLeft={mobile && 68}
               header
             >
               Personagem

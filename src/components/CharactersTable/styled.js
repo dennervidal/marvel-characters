@@ -5,6 +5,7 @@ import {
   TableCell as MuiTCell,
   TableRow as MuiTRow,
   Typography as MuiTypography,
+  Avatar as MuiAvatar,
 } from "@material-ui/core";
 
 export const ColumnDiv = styled.div`
@@ -74,5 +75,13 @@ export const Typography = styled(
     font-family: "PT Sans";
     font-size: ${({ fontSize = 14 }) => fontSize}px;
     color: ${({ header = false }) => header && "#8e8e8e"};
+    line-height: 1.35;
+  }
+`;
+
+export const Avatar = styled(MuiAvatar)`
+  && {
+    width: 48px;
+    height: 48px;
   }
 `;

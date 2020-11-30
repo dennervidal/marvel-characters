@@ -1,7 +1,8 @@
 import { lazy } from "react";
-import { NotFound } from "../pages/NotFound/NotFound";
+import NotFound from "pages/NotFound";
 
-const Home = lazy(() => import("../pages/Home"));
+const Home = lazy(() => import("pages/Home"));
+const Details = lazy(() => import("pages/Details"));
 
 export const routes = {
   HOME: {
@@ -20,6 +21,15 @@ export const routes = {
     component: Home,
     redirect(history, query) {
       return history.push(`${this.path}?query=${query}`);
+    },
+  },
+  DETAILS: {
+    path: "/details/:id",
+    title: "Details",
+    exact: true,
+    component: Details,
+    redirect(history, id) {
+      return history.push(this.path.replace(":id", id));
     },
   },
   NOT_FOUND: {

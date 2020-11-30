@@ -15,9 +15,8 @@ const LoadingPlaceholder = ({ children, loading }) => (
 );
 
 LoadingPlaceholder.propTypes = {
-  /* children component  */
   children: PropTypes.node.isRequired,
-  /* boolean that represents if parent component is loading  */
+  /** boolean that represents if parent component is loading  */
   loading: PropTypes.bool.isRequired,
 };
 

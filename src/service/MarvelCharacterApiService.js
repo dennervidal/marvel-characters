@@ -18,4 +18,18 @@ export class MarvelCharactersApiService {
       .then((response) => response.json())
       .then((responseJson) => responseJson?.data);
   }
+  static getById(charId) {
+    return fetch(
+      `${ROOT_MARVEL_API_URL}/characters/${charId}?apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => responseJson?.data);
+  }
+  static getByIdComics(charId) {
+    return fetch(
+      `${ROOT_MARVEL_API_URL}/characters/${charId}/comics?apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => responseJson?.data);
+  }
 }

@@ -1,99 +1,103 @@
 import React from "react";
 import {
-  Table as MuiTable,
   TableRow as MuiTRow,
-  TableCell,
   TableBody,
   TableHead,
   Avatar,
-  Typography,
 } from "@material-ui/core";
-import styled from "styled-components";
+import {
+  Table,
+  Typography,
+  TableCell,
+  TableRow,
+  ColumnDiv,
+  RowDiv,
+} from "./styled";
+import PropTypes from "prop-types";
+import { routes } from "routes";
 
-const ColumnDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const RowDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const TableRow = styled(MuiTRow)`
-  && {
-    background-color: #fff;
-    height: ${({ mobile }) => (mobile ? 72 : 88)}px;
-    td:first-child {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    td:last-child {
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
-    box-shadow: 0px 0px 5px #00000033;
-  }
-`;
-
-const Table = styled(MuiTable)`
-  && {
-    border-collapse: separate;
-    border-spacing: 0 8px;
-  }
-`;
-
-const HeaderCell = styled(TableCell)`
-  && {
-    padding: 16px 16px 0 16px;
-    border-bottom: unset;
-  }
-`;
-
-export const CharactersTable = ({ characters, mobile }) => {
+export const CharactersTable = ({ characters, mobile, history }) => {
   return (
     <Table>
       <TableHead>
         <MuiTRow>
-          <HeaderCell key="character">Personagem</HeaderCell>
-          <HeaderCell key="series">Séries</HeaderCell>
-          <HeaderCell key="events">Eventos</HeaderCell>
+          <TableCell key="character" header>
+            <Typography
+              variant="subtitle2"
+              fontSize={12}
+              marginLeft={mobile && 64}
+              header
+            >
+              Personagem
+            </Typography>
+          </TableCell>
+          <TableCell key="series" header mobile={mobile}>
+            <Typography variant="subtitle2" fontSize={12} header>
+              Séries
+            </Typography>
+          </TableCell>
+          <TableCell key="events" header mobile={mobile}>
+            <Typography variant="subtitle2" fontSize={12} header>
+              Eventos
+            </Typography>
+          </TableCell>
         </MuiTRow>
       </TableHead>
       <TableBody>
-        {(characters || []).map(({ name, thumbnail, events, series }, idx) => (
-          <TableRow key={`${name}-${idx}`} mobile={mobile}>
-            <TableCell>
-              <RowDiv>
-                <Avatar
-                  variant="rounded"
-                  src={`${thumbnail?.path}.${thumbnail?.extension}`}
-                />
-                <Typography variant="subtitle2">{name}</Typography>
-              </RowDiv>
-            </TableCell>
-            <TableCell>
-              <ColumnDiv>
-                {(series?.items?.slice(0, 3) || []).map(({ name }, idx) => (
-                  <Typography key={`${name}-${idx}`} variant="caption">
+        {(characters || []).map(
+          ({ name, thumbnail, events, series, id }, idx) => (
+            <TableRow
+              key={`${name}-${idx}`}
+              mobile={mobile}
+              onClick={() => routes.DETAILS.redirect(history, id)}
+            >
+              <TableCell>
+                <RowDiv>
+                  <Avatar
+                    variant="rounded"
+                    src={`${thumbnail?.path}.${thumbnail?.extension}`}
+                  />
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={600}
+                    fontSize={16}
+                    marginLeft={24}
+                  >
                     {name}
                   </Typography>
-                ))}
-              </ColumnDiv>
-            </TableCell>
-            <TableCell>
-              <ColumnDiv>
-                {(events?.items?.slice(0, 3) || []).map(({ name }, idx) => (
-                  <Typography key={`${name}-${idx}`} variant="caption">
-                    {name}
-                  </Typography>
-                ))}
-              </ColumnDiv>
-            </TableCell>
-          </TableRow>
-        ))}
+                </RowDiv>
+              </TableCell>
+              <TableCell mobile={mobile}>
+                <ColumnDiv>
+                  {(series?.items?.slice(0, 3) || []).map(({ name }, idx) => (
+                    <Typography key={`${name}-${idx}`} variant="caption">
+                      {name}
+                    </Typography>
+                  ))}
+                </ColumnDiv>
+              </TableCell>
+              <TableCell mobile={mobile}>
+                <ColumnDiv>
+                  {(events?.items?.slice(0, 3) || []).map(({ name }, idx) => (
+                    <Typography key={`${name}-${idx}`} variant="caption">
+                      {name}
+                    </Typography>
+                  ))}
+                </ColumnDiv>
+              </TableCell>
+            </TableRow>
+          )
+        )}
       </TableBody>
     </Table>
   );
+};
+
+CharactersTable.propTypes = {
+  /** characters data */
+  characters: PropTypes.array,
+  /** boolean that represents if it is mobile view  */
+  mobile: PropTypes.bool,
+  /** react-router history  */
+  history: PropTypes.object,
 };

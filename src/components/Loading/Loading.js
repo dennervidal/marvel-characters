@@ -1,13 +1,6 @@
 import React from "react";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import styled from "styled-components";
+import { Progress } from "./styled";
 
-const StyledProgress = styled(LinearProgress)`
-  && {
-    background-color: #555;
-  }
-`;
-
-const Loading = () => <StyledProgress />;
+const Loading = () => <Progress />;
 
 export { Loading };

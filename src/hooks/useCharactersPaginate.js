@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MarvelCharactersApiService } from "service";
 
-const PAGE_LIMIT = 4;
+export const PAGE_LIMIT = 10;
 
 export function useCharactersPaginate({
   nameStartsWith = undefined,

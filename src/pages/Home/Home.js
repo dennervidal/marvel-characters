@@ -16,7 +16,7 @@ export const Home = React.memo(() => {
   const params = new URLSearchParams(location.search);
   const mobile = !useMediaQuery(theme.breakpoints.up("sm"));
 
-  const { setTotal, page } = useContext(PaginationContext);
+  const { setTotal, page, gotoPage } = useContext(PaginationContext);
   const { results: characters, loading } = useCharactersPaginate({
     nameStartsWith: params.get("query"),
     setTotal,
@@ -30,6 +30,7 @@ export const Home = React.memo(() => {
           mobile={mobile}
           history={history}
           query={params.get("query")}
+          setPage={gotoPage}
         />
         <CharactersTable
           characters={characters}

@@ -5,10 +5,13 @@ import PropTypes from "prop-types";
 import { routes } from "routes";
 import { IconButton, Input, SearchDiv, Typography } from "./styled";
 
-export const SearchHeader = ({ mobile, query, history }) => {
+export const SearchHeader = ({ mobile, query, history, setPage }) => {
   const [search, setSearch] = useState(query || "");
 
-  const redirectToSearch = () => routes.SEARCH.redirect(history, search);
+  const redirectToSearch = () => {
+    setPage(1);
+    routes.SEARCH.redirect(history, search);
+  };
 
   const onKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -16,6 +19,7 @@ export const SearchHeader = ({ mobile, query, history }) => {
       redirectToSearch();
     }
   };
+
   return (
     <SearchDiv mobile={mobile}>
       <Typography variant="h5" fontSize={32} color="textPrimary">

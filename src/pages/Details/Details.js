@@ -46,7 +46,7 @@ const Details = () => {
             </Grid>
           )}
           <Grid item xs={12} md={12}>
-            <Typography variant="h6">Aparições em quadrinhos</Typography>
+            <Typography variant="h6">Comics appearance</Typography>
             <ComicPreview comics={comics} />
           </Grid>
         </GridPadding>

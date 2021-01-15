@@ -24,17 +24,17 @@ export const CharactersTable = ({ characters, mobile, history }) => {
               marginLeft={mobile && 68}
               header
             >
-              Personagem
+              Character
             </Typography>
           </TableCell>
           <TableCell key="series" header mobile={mobile}>
             <Typography variant="subtitle2" fontSize={12} header>
-              Séries
+              Series
             </Typography>
           </TableCell>
           <TableCell key="events" header mobile={mobile}>
             <Typography variant="subtitle2" fontSize={12} header>
-              Eventos
+              Events
             </Typography>
           </TableCell>
         </MuiTRow>

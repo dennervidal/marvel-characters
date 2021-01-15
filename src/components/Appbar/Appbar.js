@@ -6,7 +6,7 @@ import {
   Title,
   Typography,
 } from "./styled";
-import logo from "assets/objective-logo.png";
+import logo from "assets/marvel.svg";
 import React from "react";
 import { routes } from "routes";
 import PropTypes from "prop-types";
@@ -27,19 +27,19 @@ export const Appbar = ({ mobile, history }) => {
             marginRight={mobile ? 16 : 6}
             color="textPrimary"
           >
-            Denner Vidal
+            Characters
           </Typography>
           <Typography
             variant="body2"
             marginRight={mobile ? 16 : 6}
             color="textPrimary"
           >
-            Teste de Front-end
+            Demo
           </Typography>
         </AppBarRightDiv>
         <AvatarStyled variant="rounded">
           <Typography variant="caption" fontWeight={700}>
-            CB
+            DV
           </Typography>
         </AvatarStyled>
       </Toolbar>

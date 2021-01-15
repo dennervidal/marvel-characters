@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Avatar, Typography as MuiTypography } from "@material-ui/core";
 
 export const LogoImg = styled.img`
-  max-height: 28px;
+  max-height: 34px;
   width: auto;
   cursor: pointer;
 `;

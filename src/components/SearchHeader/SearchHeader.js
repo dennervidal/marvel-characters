@@ -23,14 +23,14 @@ export const SearchHeader = ({ mobile, query, history, setPage }) => {
   return (
     <SearchDiv mobile={mobile}>
       <Typography variant="h5" fontSize={32} color="textPrimary">
-        Busca de personagens
+        Find a character
       </Typography>
       <Typography
         variant="subtitle2"
         color="textPrimary"
         marginMultiplier={mobile ? 3 : 2}
       >
-        Nome do personagem
+        Character name
       </Typography>
       <Input
         variant="outlined"

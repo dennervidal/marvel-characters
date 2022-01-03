@@ -54,5 +54,5 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
           
-      - name: Build storybook
+      - name: Run test
         run: yarn test:ci

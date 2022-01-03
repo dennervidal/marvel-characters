@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter as Router } from "react-router-dom";
-import App from "./pages/App";
 import { ThemeProvider } from "@material-ui/styles";
-import { StyledThemeProvider } from "components/styled";
+
 import { PaginationContextProvider } from "context";
+import { StyledThemeProvider } from "components/styled";
+import App from "./pages/App";
 import theme from "./utils/theme";
 
 import "fontsource-pt-sans";

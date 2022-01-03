@@ -70,7 +70,9 @@ jobs:
           key: ${{ github.sha }}
           
       - name: Build app
-        run: yarn build
+        env: 
+          REACT_APP_API_PUBLIC_KEY: ${{ env.REACT_APP_API_PUBLIC_KEY }}
+        run: echo $REACT_APP_API_PUBLIC_KEY && yarn build
           
       - name: Deploy app
         uses: peaceiris/actions-gh-pages@v3

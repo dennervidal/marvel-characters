@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on: push
 
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: yarn --pure-lockfile --prefer-offline
 
-      - name: Build packages
+      - name: Build app
         run: yarn build
       
       - name: Cache build
@@ -44,6 +44,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Restore build cache
+        uses: actions/cache@v2
+        id: ci-build-cache
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+          
+      - name: Test app
+        run: yarn test:ci
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - uses: actions/checkout@v2
@@ -54,5 +69,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
           
-      - name: Run test
-        run: yarn test:ci
+      - name: Deploy app
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy to GitHub pages:'

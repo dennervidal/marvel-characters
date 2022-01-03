@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Use Node 16
+      - name: Use Node 14
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 14.x
 
       - name: Checkout repository
         uses: actions/checkout@v2

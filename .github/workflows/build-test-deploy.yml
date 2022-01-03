@@ -72,9 +72,7 @@ jobs:
       - name: Build app
         env: 
           REACT_APP_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
-          ENVS: ${{ toJson(secrets) }}
-          ENVS2: ${{ toJson(env) }}
-        run: echo "$REACT_APP_API_PUBLIC_KEY | $ENVS | $ENVS2" && yarn build
+        run: yarn build
           
       - name: Deploy app
         uses: peaceiris/actions-gh-pages@v3

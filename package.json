@@ -67,5 +67,14 @@
     "lint-staged": "^10.5.2",
     "prettier": "^2.2.1",
     "prop-types": "^15.7.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "directory": ".",
+    "url": "git+ssh://git@github.com/dennervidal/marvel-characters.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dennervidal/marvel-characters/issues"
+  },
+  "homepage": "https://dennervidal.github.io/marvel-characters"
 }

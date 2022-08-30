@@ -8,8 +8,8 @@ import { StyledThemeProvider } from "components/styled";
 import App from "./pages/App";
 import theme from "./utils/theme";
 
-import "fontsource-pt-sans";
-import "fontsource-pt-sans-caption";
+import "@fontsource/pt-sans";
+import "@fontsource/pt-sans-caption";
 import "./index.css";
 
 ReactDOM.render(

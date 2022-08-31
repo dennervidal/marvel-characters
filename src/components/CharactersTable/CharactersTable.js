@@ -11,8 +11,10 @@ import {
 } from "./styled";
 import PropTypes from "prop-types";
 import { routes } from "routes";
+import {useNavigate} from "react-router";
 
-export const CharactersTable = ({ characters, mobile, history }) => {
+export const CharactersTable = ({ characters, mobile }) => {
+  const navigate = useNavigate()
   return (
     <Table>
       <TableHead>
@@ -45,7 +47,7 @@ export const CharactersTable = ({ characters, mobile, history }) => {
             <TableRow
               key={`${name}-${idx}`}
               mobile={mobile}
-              onClick={() => routes.DETAILS.redirect(history, id)}
+              onClick={() => routes.DETAILS.redirect(navigate, id)}
             >
               <TableCell>
                 <RowDiv>
@@ -94,6 +96,4 @@ CharactersTable.propTypes = {
   characters: PropTypes.array,
   /** boolean that represents if it is mobile view  */
   mobile: PropTypes.bool,
-  /** react-router history  */
-  history: PropTypes.object,
 };

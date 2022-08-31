@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { HashRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
 
@@ -12,7 +12,10 @@ import "@fontsource/pt-sans";
 import "@fontsource/pt-sans-caption";
 import "./index.css";
 
-ReactDOM.render(
+const container = document.getElementById("root")
+const root = createRoot(container)
+
+root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <PaginationContextProvider>
@@ -23,6 +26,5 @@ ReactDOM.render(
         </Router>
       </PaginationContextProvider>
     </ThemeProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

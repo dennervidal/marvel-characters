@@ -4,14 +4,13 @@ import { useCharactersPaginate } from "hooks";
 import { LoadingPlaceholder } from "components/LoadingPlaceholder";
 import { PaginationContext } from "context";
 import { CharactersTable } from "components/CharactersTable";
-import { useHistory, useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useTheme } from "@material-ui/styles";
 import { MainDiv } from "./styled";
 import { SearchHeader } from "components/SearchHeader";
 
 export const Home = React.memo(() => {
   const location = useLocation();
-  const history = useHistory();
   const theme = useTheme();
   const params = new URLSearchParams(location.search);
   const mobile = !useMediaQuery(theme.breakpoints.up("sm"));
@@ -28,15 +27,10 @@ export const Home = React.memo(() => {
       <MainDiv>
         <SearchHeader
           mobile={mobile}
-          history={history}
           query={params.get("query")}
           setPage={gotoPage}
         />
-        <CharactersTable
-          characters={characters}
-          mobile={mobile}
-          history={history}
-        />
+        <CharactersTable characters={characters} mobile={mobile} />
       </MainDiv>
     </LoadingPlaceholder>
   );

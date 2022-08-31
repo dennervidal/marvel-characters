@@ -3,8 +3,11 @@ import Pagination from "@material-ui/lab/Pagination";
 import PropTypes from "prop-types";
 import { PaginationContext } from "context";
 import { MainDiv } from "./styled";
+import { useLocation } from "react-router-dom";
 
-export const Navigation = ({ location }) => {
+export const Navigation = () => {
+  const location = useLocation();
+
   const isDetails = location.pathname.startsWith("/details");
   const { page, total, gotoPage } = useContext(PaginationContext);
 
@@ -25,7 +28,4 @@ export const Navigation = ({ location }) => {
   );
 };
 
-Navigation.propTypes = {
-  /** react-router location */
-  location: PropTypes.object,
-};
+Navigation.propTypes = {};

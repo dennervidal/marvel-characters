@@ -10,9 +10,11 @@ import logo from "assets/marvel.svg";
 import React from "react";
 import { routes } from "routes";
 import PropTypes from "prop-types";
+import {useNavigate} from "react-router";
 
-export const Appbar = ({ mobile, history }) => {
-  const onClickImage = () => routes.HOME.redirect(history);
+export const Appbar = ({ mobile }) => {
+  const navigate = useNavigate()
+  const onClickImage = () => routes.HOME.redirect(navigate);
 
   return (
     <AppBar variant="outlined" position="fixed">
@@ -48,8 +50,6 @@ export const Appbar = ({ mobile, history }) => {
 };
 
 Appbar.propTypes = {
-  /** history function for react-router */
-  history: PropTypes.object.isRequired,
   /** boolean that represents if it is mobile view  */
   mobile: PropTypes.bool.isRequired,
 };

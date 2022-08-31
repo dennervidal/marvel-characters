@@ -4,13 +4,15 @@ import SearchIcon from "@material-ui/icons/Search";
 import PropTypes from "prop-types";
 import { routes } from "routes";
 import { IconButton, Input, SearchDiv, Typography } from "./styled";
+import { useNavigate } from "react-router";
 
-export const SearchHeader = ({ mobile, query, history, setPage }) => {
+export const SearchHeader = ({ mobile, query, setPage }) => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState(query || "");
 
   const redirectToSearch = () => {
     setPage(1);
-    routes.SEARCH.redirect(history, search);
+    routes.SEARCH.redirect(navigate, search);
   };
 
   const onKeyDown = (e) => {
@@ -59,6 +61,4 @@ SearchHeader.propTypes = {
   mobile: PropTypes.bool,
   /** search query param string */
   query: PropTypes.string,
-  /** react-router history */
-  history: PropTypes.object,
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { useCharacterComicsById } from "hooks/useCharacterComicsById";
@@ -8,11 +8,16 @@ import { routes } from "routes/routes";
 import { ComicPreview } from "components/ComicPreview";
 import { useCharacterById } from "hooks/useCharacterById";
 import { DetailImg, GridPadding } from "./styled";
+import { useNavigate } from "react-router";
 
 const Details = () => {
   const { id } = useParams();
-  const history = useHistory();
-  const { result: comics, error, loading } = useCharacterComicsById({
+  const navigate = useNavigate();
+  const {
+    result: comics,
+    error,
+    loading,
+  } = useCharacterComicsById({
     id,
   });
   const { result: character, loading: charLoad } = useCharacterById({
@@ -21,9 +26,9 @@ const Details = () => {
 
   useEffect(() => {
     if (error) {
-      routes.NOT_FOUND.redirect(history);
+      routes.NOT_FOUND.redirect(navigate);
     }
-  }, [error, history]);
+  }, [error, navigate]);
 
   return (
     <Grid spacing={0} container>

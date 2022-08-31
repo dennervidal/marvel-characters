@@ -10,8 +10,8 @@ export const routes = {
     title: "Home",
     exact: true,
     component: Home,
-    redirect(history) {
-      return history.push(this.path);
+    redirect(navigate) {
+      return navigate(this.path);
     },
   },
   SEARCH: {
@@ -19,8 +19,8 @@ export const routes = {
     title: "Search",
     exact: true,
     component: Home,
-    redirect(history, query) {
-      return history.push(`${this.path}?query=${query}`);
+    redirect(navigate, query) {
+      return navigate(`${this.path}?query=${query}`);
     },
   },
   DETAILS: {
@@ -28,8 +28,8 @@ export const routes = {
     title: "Details",
     exact: true,
     component: Details,
-    redirect(history, id) {
-      return history.push(this.path.replace(":id", id));
+    redirect(navigate, id) {
+      return navigate(this.path.replace(":id", id));
     },
   },
   NOT_FOUND: {
@@ -37,8 +37,8 @@ export const routes = {
     title: "Not Fund",
     exact: true,
     component: NotFound,
-    redirect(history) {
-      return history.push(this.path);
+    redirect(navigate) {
+      return navigate(this.path);
     },
   },
 };

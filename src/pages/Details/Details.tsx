@@ -11,7 +11,7 @@ import { DetailImg, GridPadding } from "./styled";
 import { useNavigate } from "react-router";
 
 const Details = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
     result: comics,

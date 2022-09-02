@@ -8,9 +8,9 @@ export const RoutesList = () => (
   <ErrorBoundary>
     <Routes>
       {Object.values(routes).map(({ path, exact, component: Component }) => (
-        <Route key={path} path={path} element={<Component />} exact={exact} />
+        <Route key={path} path={path} element={<Component />} />
       ))}
-      <Route component={NotFound} />
+      <Route element={<NotFound />} />
     </Routes>
   </ErrorBoundary>
 );

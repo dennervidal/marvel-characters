@@ -1,13 +1,19 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import PropTypes from "prop-types";
 import { Loading } from "components/Loading";
 
-const LoadingPlaceholder = ({ children, loading }) => (
+const LoadingPlaceholder = ({
+  children,
+  loading,
+}: {
+  children: ReactNode;
+  loading: boolean;
+}) => (
   <>
     {loading ? (
-      <Loading id="loading-placeholder" />
+      <Loading />
     ) : (
-      React.Children.map(children, (child, index) =>
+      React.Children.map(children, (child: any, index) =>
         React.cloneElement(child, { id: index })
       )
     )}

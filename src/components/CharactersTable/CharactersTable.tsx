@@ -11,10 +11,17 @@ import {
 } from "./styled";
 import PropTypes from "prop-types";
 import { routes } from "routes";
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
+import { Character } from "types";
 
-export const CharactersTable = ({ characters, mobile }) => {
-  const navigate = useNavigate()
+export const CharactersTable = ({
+  characters,
+  mobile,
+}: {
+  characters: Character[] | undefined;
+  mobile: boolean;
+}) => {
+  const navigate = useNavigate();
   return (
     <Table>
       <TableHead>

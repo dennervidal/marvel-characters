@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const MainDiv = styled.div`
-  display: ${({ isDetails }) => (isDetails ? "none" : "flex")};
+  display: ${({ isDetails }: { isDetails: boolean }) =>
+    isDetails ? "none" : "flex"};
   flex-direction: column;
   align-items: center;
   justify-content: center;

@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "@material-ui/styles";
-import { useMediaQuery } from "@material-ui/core";
+import { Theme, useMediaQuery } from "@material-ui/core";
 import { RoutesList } from "routes/RoutesList";
 import { useWindowSize } from "hooks";
 import { Loading } from "components/Loading";
@@ -10,7 +10,7 @@ import { MainDiv, AppContainer } from "./styled";
 import { Appbar } from "components/Appbar/Appbar";
 
 const App = () => {
-  const theme = useTheme();
+  const theme = useTheme() as Theme;
   const mobile = !useMediaQuery(theme.breakpoints.up("sm"));
   const [, height] = useWindowSize();
 
@@ -20,7 +20,7 @@ const App = () => {
         <Appbar mobile={mobile} />
       </div>
       <AppContainer mobile={mobile}>
-        <Suspense fallback={<Loading id="loading" />}>
+        <Suspense fallback={<Loading />}>
           <RoutesList />
         </Suspense>
       </AppContainer>

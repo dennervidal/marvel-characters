@@ -31,7 +31,7 @@ export const SearchDiv = styled.div`
   flex-direction: column;
   margin-top: 40px;
   margin-bottom: 24px;
-  align-items: ${({ mobile }) => mobile && "center"};
+  align-items: ${({ mobile }: { mobile: boolean }) => mobile && "center"};
 `;
 
 export const Typography = styled(
@@ -40,8 +40,9 @@ export const Typography = styled(
   )
 )`
   && {
-    font-weight: ${({ fontWeight = 600 }) => fontWeight};
-    font-size: ${({ fontSize = 16 }) => fontSize}px;
+    font-weight: ${({ fontWeight = 600 }: { fontWeight: number }) =>
+      fontWeight};
+    font-size: ${({ fontSize = 16 }: { fontSize: number }) => fontSize}px;
     font-family: "PT Sans Caption";
     margin-top: ${({ marginMultiplier = 0 }) => marginMultiplier * 8}px;
   }

@@ -1,13 +1,25 @@
 import { useEffect, useState } from "react";
 import { MarvelCharactersApiService } from "service";
+import { Character } from "../types";
 
 export const PAGE_LIMIT = 10;
+
+type UseCharactersPaginateParams = {
+  nameStartsWith: string | undefined | null;
+  setTotal: (total: number) => void;
+  page: number;
+};
+type UseCharactersPaginateReturn = {
+  results: Character[] | undefined;
+  loading: boolean;
+  error: any;
+};
 
 export function useCharactersPaginate({
   nameStartsWith = undefined,
   setTotal,
   page: currentPage,
-} = {}) {
+}: UseCharactersPaginateParams): UseCharactersPaginateReturn {
   const [results, setResults] = useState(undefined);
   const [error, setErros] = useState(undefined);
   const [loading, setLoading] = useState(!!nameStartsWith);

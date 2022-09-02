@@ -1,6 +1,14 @@
 const ROOT_MARVEL_API_URL = "https://gateway.marvel.com/v1/public";
 
-const getCharactersList = ({ nameStartsWith, page = 0, limit = 20 }) => {
+const getCharactersList = ({
+  nameStartsWith,
+  page = 0,
+  limit = 20,
+}: {
+  nameStartsWith: string | undefined | null;
+  page: number;
+  limit: number;
+}) => {
   let nameParam = "";
 
   if (nameStartsWith) {
@@ -13,19 +21,23 @@ const getCharactersList = ({ nameStartsWith, page = 0, limit = 20 }) => {
 };
 
 export class MarvelCharactersApiService {
-  static getPaginated(nameStartsWith, page, limit) {
+  static getPaginated(
+    nameStartsWith: string | undefined | null,
+    page: number,
+    limit: number
+  ) {
     return fetch(getCharactersList({ nameStartsWith, page, limit }))
       .then((response) => response.json())
       .then((responseJson) => responseJson?.data);
   }
-  static getById(charId) {
+  static getById(charId: string | number | undefined) {
     return fetch(
       `${ROOT_MARVEL_API_URL}/characters/${charId}?apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
     )
       .then((response) => response.json())
       .then((responseJson) => responseJson?.data);
   }
-  static getByIdComics(charId) {
+  static getByIdComics(charId: string | number | undefined) {
     return fetch(
       `${ROOT_MARVEL_API_URL}/characters/${charId}/comics?apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
     )

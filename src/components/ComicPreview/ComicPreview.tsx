@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@material-ui/core";
 import { ComicGrid, Typography, ComicImg } from "./styled";
+import { Comic } from "../../types";
 
-const ComicPreview = ({ comics }) => {
+const ComicPreview = ({ comics }: { comics?: Comic[] }) => {
   return (
     <Grid container>
       {(comics || []).map(({ thumbnail, id, title }, index) => (

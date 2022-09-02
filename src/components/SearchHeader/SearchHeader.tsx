@@ -6,16 +6,24 @@ import { routes } from "routes";
 import { IconButton, Input, SearchDiv, Typography } from "./styled";
 import { useNavigate } from "react-router";
 
-export const SearchHeader = ({ mobile, query, setPage }) => {
+export const SearchHeader = ({
+  mobile,
+  query,
+  setPage,
+}: {
+  mobile: boolean;
+  query: string | null | undefined;
+  setPage: (page: number) => void;
+}) => {
   const navigate = useNavigate();
-  const [search, setSearch] = useState(query || "");
+  const [search, setSearch] = useState<string>(query || "");
 
   const redirectToSearch = () => {
     setPage(1);
     routes.SEARCH.redirect(navigate, search);
   };
 
-  const onKeyDown = (e) => {
+  const onKeyDown = (e: { key: string; preventDefault: () => void }) => {
     if (e.key === "Enter") {
       e.preventDefault();
       redirectToSearch();
@@ -40,7 +48,9 @@ export const SearchHeader = ({ mobile, query, setPage }) => {
         size="small"
         onKeyDown={onKeyDown}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
+          setSearch(e?.target?.value)
+        }
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

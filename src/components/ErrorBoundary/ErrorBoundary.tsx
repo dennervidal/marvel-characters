@@ -1,22 +1,30 @@
 /* eslint no-console: 0 */
-import React from "react";
+import React, { CSSProperties, ErrorInfo, ReactNode } from "react";
 
-const style = { textAlign: "center" };
+const style: CSSProperties = { textAlign: "center" };
 const sadFaceEmoji = `:'(`;
 
+interface Props {
+  children?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+}
+
 // Must be class
-class ErrorBoundary extends React.Component {
-  constructor(props) {
+class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props | Readonly<Props>) {
     super(props);
     this.state = { hasError: false };
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     console.log("Error Catch");
     console.log(error);
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_: Error) {
     return { hasError: true };
   }
 

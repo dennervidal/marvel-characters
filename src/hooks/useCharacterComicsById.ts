@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react";
 import { MarvelCharactersApiService } from "service";
+import { Comic } from "../types";
 
-export function useCharacterComicsById({ id }) {
+type UseCharacterComicsByIdParams = {
+  id: string | number | undefined;
+};
+type UseCharacterComicsByIdReturn = {
+  result: Comic[] | undefined;
+  loading: boolean;
+  error: any;
+};
+export function useCharacterComicsById({
+  id,
+}: UseCharacterComicsByIdParams): UseCharacterComicsByIdReturn {
   const [result, setResult] = useState(undefined);
   const [error, setError] = useState(undefined);
   const [loading, setLoading] = useState(true);

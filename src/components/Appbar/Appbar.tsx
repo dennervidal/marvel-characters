@@ -10,10 +10,10 @@ import logo from "assets/marvel.svg";
 import React from "react";
 import { routes } from "routes";
 import PropTypes from "prop-types";
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 
-export const Appbar = ({ mobile }) => {
-  const navigate = useNavigate()
+export const Appbar = ({ mobile }: { mobile: boolean }) => {
+  const navigate = useNavigate();
   const onClickImage = () => routes.HOME.redirect(navigate);
 
   return (

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import PropTypes from "prop-types";
 import { PaginationContext } from "./PaginationContext";
 
-const PaginationContextProvider = ({ children }) => {
-  const [page, _setPage] = useState(1);
-  const [total, _setTotal] = useState(0);
+const PaginationContextProvider = ({ children }: { children: ReactNode }) => {
+  const [page, _setPage] = useState<number>(1);
+  const [total, _setTotal] = useState<number>(0);
 
-  const gotoPage = (pageNumber) => {
+  const gotoPage = (pageNumber: number) => {
     _setPage(pageNumber);
   };
 
-  const setTotal = (totalNumber) => {
+  const setTotal = (totalNumber: number) => {
     _setTotal(totalNumber);
   };
 

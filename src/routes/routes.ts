@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import NotFound from "pages/NotFound";
+import { NavigateFunction } from "react-router";
 
 const Home = lazy(() => import("pages/Home"));
 const Details = lazy(() => import("pages/Details"));
@@ -10,7 +11,7 @@ export const routes = {
     title: "Home",
     exact: true,
     component: Home,
-    redirect(navigate) {
+    redirect(navigate: NavigateFunction) {
       return navigate(this.path);
     },
   },
@@ -19,7 +20,7 @@ export const routes = {
     title: "Search",
     exact: true,
     component: Home,
-    redirect(navigate, query) {
+    redirect(navigate: NavigateFunction, query: string) {
       return navigate(`${this.path}?query=${query}`);
     },
   },
@@ -28,8 +29,8 @@ export const routes = {
     title: "Details",
     exact: true,
     component: Details,
-    redirect(navigate, id) {
-      return navigate(this.path.replace(":id", id));
+    redirect(navigate: NavigateFunction, id: string | number | undefined) {
+      return navigate(this.path.replace(":id", String(id)));
     },
   },
   NOT_FOUND: {
@@ -37,7 +38,7 @@ export const routes = {
     title: "Not Fund",
     exact: true,
     component: NotFound,
-    redirect(navigate) {
+    redirect(navigate: NavigateFunction) {
       return navigate(this.path);
     },
   },

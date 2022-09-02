@@ -10,7 +10,7 @@ export const LogoImg = styled.img`
 
 export const Title = styled.div`
   flex-grow: 1;
-  padding-right: ${({ mobile }) => mobile && 32}px;
+  padding-right: ${({ mobile }: { mobile: boolean }) => mobile && 32}px;
 `;
 
 export const AvatarStyled = styled(Avatar)`
@@ -24,16 +24,20 @@ export const AvatarStyled = styled(Avatar)`
 
 export const AppBarRightDiv = styled.div`
   display: flex;
-  flex-direction: ${({ mobile }) => (mobile ? "column" : "row")};
-  align-items: ${({ mobile }) => (mobile ? "flex-end" : "center")};
+  flex-direction: ${({ mobile }: { mobile: boolean }) =>
+    mobile ? "column" : "row"};
+  align-items: ${({ mobile }: { mobile: boolean }) =>
+    mobile ? "flex-end" : "center"};
 `;
 
 export const Typography = styled(({ fontWeight, marginRight, ...props }) => (
   <MuiTypography {...props} />
 ))`
   && {
-    font-weight: ${({ fontWeight = 400 }) => fontWeight};
-    margin-right: ${({ marginRight = 0 }) => marginRight}px;
+    font-weight: ${({ fontWeight = 400 }: { fontWeight: number }) =>
+      fontWeight};
+    margin-right: ${({ marginRight = 0 }: { marginRight: number }) =>
+      marginRight}px;
     font-family: "PT Sans Caption";
     font-size: 14px;
   }

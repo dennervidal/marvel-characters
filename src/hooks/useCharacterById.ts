@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import { MarvelCharactersApiService } from "service";
+import { Character } from "../types";
 
-export function useCharacterById({ id }) {
+type UseCharacterByIdParams = {
+  id: string | number | undefined;
+};
+type UseCharacterByIdReturn = {
+  result: Character | undefined;
+  loading: boolean;
+  error: any;
+};
+
+export function useCharacterById({
+  id,
+}: UseCharacterByIdParams): UseCharacterByIdReturn {
   const [result, setResult] = useState(undefined);
   const [error, setError] = useState(undefined);
   const [loading, setLoading] = useState(true);

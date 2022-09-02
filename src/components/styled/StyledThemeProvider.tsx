@@ -1,11 +1,13 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@material-ui/styles";
 import { ThemeProvider } from "styled-components";
 
-const StyledThemeProvider = ({ children }) => {
+const StyledThemeProvider = ({ children }: { children: ReactNode }) => {
   const muiTheme = useTheme();
 
+  // TODO: Remove ignore
+  // @ts-ignore
   return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>;
 };
 

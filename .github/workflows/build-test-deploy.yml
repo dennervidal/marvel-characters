@@ -1,80 +1,103 @@
-name: CI/CD
+name: ci
 
 on: push
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
-
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
-      - name: Use Node 14
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
+      - name: checkout
+        uses: actions/checkout@v3
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: setup node
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 0
+          node-version: '16'
+          cache: 'yarn'
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install dependencies
-        run: yarn --pure-lockfile --prefer-offline
+      - name: install
+        run: yarn
 
-      - name: Build app
-        run: yarn build
-      
-      - name: Cache build
-        uses: actions/cache@v2
-        id: ci-build-cache
+      - name: cache
+        uses: actions/cache@v3
+        id: ci-setup-cache
         with:
           path: ./*
           key: ${{ github.sha }}
         
   test:
     runs-on: ubuntu-latest
-    needs: build
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    needs: setup
     steps:
-      - uses: actions/checkout@v2
-      - name: Restore build cache
-        uses: actions/cache@v2
-        id: ci-build-cache
+      - uses: actions/checkout@v3
+
+      - name: restore
+        uses: actions/cache@v3
+        id: ci-setup-cache
         with:
           path: ./*
           key: ${{ github.sha }}
-          
-      - name: Test app
+
+      - name: test
         run: yarn test:ci
-        
-  deploy:
+
+  build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     needs: test
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Restore build cache
-        uses: actions/cache@v2
-        id: ci-build-cache
+      - uses: actions/checkout@v3
+
+      - name: restore
+        uses: actions/cache@v3
+        id: ci-setup-cache
         with:
           path: ./*
           key: ${{ github.sha }}
-          
-      - name: Build app
-        env: 
+
+      - name: build
+        env:
           REACT_APP_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
         run: yarn build
+
+      - name: cache
+        uses: actions/cache@v3
+        id: ci-build-cache
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: restore
+        uses: actions/cache@v3
+        id: ci-build-cache
+        with:
+          path: ./*
+          key: ${{ github.sha }}
           
-      - name: Deploy app
+#      - name: Build app
+#        env:
+#          REACT_APP_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
+#        run: yarn build
+          
+      - name: deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

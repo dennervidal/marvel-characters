@@ -1,2 +1,2 @@
-export { useCharactersPaginate } from "./useCharactersPaginate";
-export { useWindowSize } from "./useWindowSize";
+export { useCharactersPaginate } from './useCharactersPaginate'
+export { useWindowSize } from './useWindowSize'

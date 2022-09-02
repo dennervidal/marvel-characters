@@ -1,1 +1,1 @@
-export { MarvelCharactersApiService } from "./MarvelCharacterApiService";
+export { MarvelCharactersApiService } from './MarvelCharacterApiService'

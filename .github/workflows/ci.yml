@@ -21,6 +21,9 @@ jobs:
       - name: install
         run: yarn
 
+      - name: lint
+        run: yarn eslint:fix:dry
+
       - name: cache
         uses: actions/cache@v3
         id: ci-setup-cache

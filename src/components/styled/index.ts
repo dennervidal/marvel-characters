@@ -1,1 +1,1 @@
-export { StyledThemeProvider } from "./StyledThemeProvider";
+export { StyledThemeProvider } from './StyledThemeProvider'

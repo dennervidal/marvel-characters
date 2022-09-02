@@ -1,8 +1,8 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import { routes } from "../routes";
-import NotFound from "pages/NotFound";
-import { ErrorBoundary } from "components/ErrorBoundary";
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { routes } from '../routes'
+import NotFound from 'pages/NotFound'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 
 export const RoutesList = () => (
   <ErrorBoundary>
@@ -13,4 +13,4 @@ export const RoutesList = () => (
       <Route element={<NotFound />} />
     </Routes>
   </ErrorBoundary>
-);
+)

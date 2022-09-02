@@ -1,18 +1,17 @@
-import React, { Suspense } from "react";
-import { useLocation } from "react-router-dom";
-import { useTheme } from "@material-ui/styles";
-import { Theme, useMediaQuery } from "@material-ui/core";
-import { RoutesList } from "routes/RoutesList";
-import { useWindowSize } from "hooks";
-import { Loading } from "components/Loading";
-import { Navigation } from "components/Navigation";
-import { MainDiv, AppContainer } from "./styled";
-import { Appbar } from "components/Appbar/Appbar";
+import React, { Suspense } from 'react'
+import { useTheme } from '@material-ui/styles'
+import { Theme, useMediaQuery } from '@material-ui/core'
+import { RoutesList } from 'routes/RoutesList'
+import { useWindowSize } from 'hooks'
+import { Loading } from 'components/Loading'
+import { Navigation } from 'components/Navigation'
+import { MainDiv, AppContainer } from './styled'
+import { Appbar } from 'components/Appbar/Appbar'
 
 const App = () => {
-  const theme = useTheme() as Theme;
-  const mobile = !useMediaQuery(theme.breakpoints.up("sm"));
-  const [, height] = useWindowSize();
+  const theme: Theme = useTheme()
+  const mobile = !useMediaQuery(theme.breakpoints.up('sm'))
+  const [, height] = useWindowSize()
 
   return (
     <MainDiv height={height}>
@@ -26,7 +25,7 @@ const App = () => {
       </AppContainer>
       <Navigation />
     </MainDiv>
-  );
-};
+  )
+}
 
-export default App;
+export default App

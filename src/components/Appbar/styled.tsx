@@ -1,17 +1,17 @@
-import React from "react";
-import styled from "styled-components";
-import { Avatar, Typography as MuiTypography } from "@material-ui/core";
+import React from 'react'
+import styled from 'styled-components'
+import { Avatar, Typography as MuiTypography } from '@material-ui/core'
 
 export const LogoImg = styled.img`
   max-height: 34px;
   width: auto;
   cursor: pointer;
-`;
+`
 
 export const Title = styled.div`
   flex-grow: 1;
   padding-right: ${({ mobile }: { mobile: boolean }) => mobile && 32}px;
-`;
+`
 
 export const AvatarStyled = styled(Avatar)`
   && {
@@ -20,15 +20,15 @@ export const AvatarStyled = styled(Avatar)`
     height: 32px;
     color: #555;
   }
-`;
+`
 
 export const AppBarRightDiv = styled.div`
   display: flex;
   flex-direction: ${({ mobile }: { mobile: boolean }) =>
-    mobile ? "column" : "row"};
+    mobile ? 'column' : 'row'};
   align-items: ${({ mobile }: { mobile: boolean }) =>
-    mobile ? "flex-end" : "center"};
-`;
+    mobile ? 'flex-end' : 'center'};
+`
 
 export const Typography = styled(({ fontWeight, marginRight, ...props }) => (
   <MuiTypography {...props} />
@@ -38,7 +38,7 @@ export const Typography = styled(({ fontWeight, marginRight, ...props }) => (
       fontWeight};
     margin-right: ${({ marginRight = 0 }: { marginRight: number }) =>
       marginRight}px;
-    font-family: "PT Sans Caption";
+    font-family: 'PT Sans Caption';
     font-size: 14px;
   }
-`;
+`

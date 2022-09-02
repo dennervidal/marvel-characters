@@ -1,1 +1,1 @@
-export { LoadingPlaceholder } from "./LoadingPlaceholder";
+export { LoadingPlaceholder } from './LoadingPlaceholder'

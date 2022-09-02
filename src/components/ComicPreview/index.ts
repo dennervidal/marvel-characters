@@ -1,1 +1,1 @@
-export { ComicPreview } from "./ComicPreview";
+export { ComicPreview } from './ComicPreview'

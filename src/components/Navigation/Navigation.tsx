@@ -1,20 +1,19 @@
-import React, { useContext } from "react";
-import Pagination from "@material-ui/lab/Pagination";
-import PropTypes from "prop-types";
-import { PaginationContext } from "context";
-import { MainDiv } from "./styled";
-import { useLocation } from "react-router-dom";
+import React, { useContext } from 'react'
+import Pagination from '@material-ui/lab/Pagination'
+import { PaginationContext } from 'context'
+import { MainDiv } from './styled'
+import { useLocation } from 'react-router-dom'
 
 export const Navigation = () => {
-  const location = useLocation();
+  const location = useLocation()
 
-  const isDetails = location.pathname.startsWith("/details");
-  const { page, total, gotoPage } = useContext(PaginationContext);
+  const isDetails = location.pathname.startsWith('/details')
+  const { page, total, gotoPage } = useContext(PaginationContext)
 
   return (
     <MainDiv isDetails={isDetails}>
       <Pagination
-        shape="rounded"
+        shape='rounded'
         showFirstButton={page > 1}
         showLastButton={page < total}
         count={total}
@@ -25,7 +24,7 @@ export const Navigation = () => {
         hidePrevButton={page === 1}
       />
     </MainDiv>
-  );
-};
+  )
+}
 
-Navigation.propTypes = {};
+Navigation.propTypes = {}

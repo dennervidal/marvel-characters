@@ -1,18 +1,18 @@
-import React, { ReactNode } from "react";
-import PropTypes from "prop-types";
-import { useTheme } from "@material-ui/styles";
-import { ThemeProvider } from "styled-components";
+import React, { ReactNode } from 'react'
+import PropTypes from 'prop-types'
+import { useTheme } from '@material-ui/styles'
+import { ThemeProvider } from 'styled-components'
 
 const StyledThemeProvider = ({ children }: { children: ReactNode }) => {
-  const muiTheme = useTheme();
+  const muiTheme = useTheme()
 
   // TODO: Remove ignore
-  // @ts-ignore
-  return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>;
-};
+  // @ts-expect-error
+  return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
+}
 
 StyledThemeProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+  children: PropTypes.node.isRequired
+}
 
-export { StyledThemeProvider };
+export { StyledThemeProvider }

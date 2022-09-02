@@ -1,2 +1,2 @@
-export { routes } from "./routes";
-export { RoutesList } from "./RoutesList";
+export { routes } from './routes'
+export { RoutesList } from './RoutesList'

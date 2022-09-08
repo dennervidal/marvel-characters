@@ -8,11 +8,14 @@ specifiers:
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.3.0
   '@testing-library/user-event': ^14.4.3
+  '@types/crypto-js': ^4.1.1
   '@types/jest': ^29.0.0
   '@types/node': ^18.7.14
   '@types/react': ^18.0.18
   '@types/react-dom': ^18.0.6
   '@types/styled-components': ^5.1.26
+  '@types/uuid': ^8.3.4
+  crypto-js: ^4.1.1
   eslint: 8.22.0
   eslint-config-next: 12.2.5
   eslint-config-prettier: ^8.5.0
@@ -28,26 +31,31 @@ specifiers:
   react-dom: ^18.2.0
   styled-components: ^5.3.5
   typescript: ^4.8.2
+  uuid: ^9.0.0
 
 dependencies:
   '@material-ui/core': 4.12.4_63dfw6rfgd64rl77ptfma4cvt4
   '@material-ui/icons': 4.11.3_z2h7o3gsoxcgjypocvfzgg5rli
   '@material-ui/lab': 4.0.0-alpha.61_z2h7o3gsoxcgjypocvfzgg5rli
   '@material-ui/styles': 4.11.5_63dfw6rfgd64rl77ptfma4cvt4
+  crypto-js: 4.1.1
   next: 12.3.0_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   styled-components: 5.3.5_biqbaboplfbrettd7655fr4n2y
+  uuid: 9.0.0
 
 devDependencies:
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
   '@testing-library/user-event': 14.4.3
+  '@types/crypto-js': 4.1.1
   '@types/jest': 29.0.0
   '@types/node': 18.7.16
   '@types/react': 18.0.18
   '@types/react-dom': 18.0.6
   '@types/styled-components': 5.1.26
+  '@types/uuid': 8.3.4
   eslint: 8.22.0
   eslint-config-next: 12.2.5_76twfck5d7crjqrmw4yltga7zm
   eslint-config-prettier: 8.5.0_eslint@8.22.0
@@ -1161,6 +1169,10 @@ packages:
       '@babel/types': 7.19.0
     dev: true
 
+  /@types/crypto-js/4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
+    dev: true
+
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
@@ -1266,6 +1278,10 @@ packages:
 
   /@types/tough-cookie/4.0.2:
     resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==}
+    dev: true
+
+  /@types/uuid/8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: true
 
   /@types/yargs-parser/21.0.0:
@@ -1855,6 +1871,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
 
   /css-color-keywords/1.0.0:
     resolution: {integrity: sha512-FyyrDHZKEjXDpNJYvVsV960FiqQyXc/LlYmsxl2BcdMb2WPx0OGRVgTg55rPSyLSNMqP52R9r8geSp7apN3Ofg==}
@@ -4907,6 +4927,11 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
     dev: false
 
   /v8-compile-cache/2.3.0:

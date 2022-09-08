@@ -18,7 +18,7 @@ export const SearchHeader = ({
 
   const redirectToSearch = () => {
     setPage(1)
-    router.push(`/?query=${search}`).then()
+    router.push(`/search?query=${search}`).then()
   }
 
   const onKeyDown = (e: { key: string; preventDefault: () => void }) => {

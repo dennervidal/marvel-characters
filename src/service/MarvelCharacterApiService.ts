@@ -1,24 +1,4 @@
-const ROOT_MARVEL_API_URL = 'https://gateway.marvel.com/v1/public'
-
-const getCharactersList = ({
-  nameStartsWith,
-  page = 0,
-  limit = 20
-}: {
-  nameStartsWith: string | undefined | null
-  page: number
-  limit: number
-}) => {
-  let nameParam = ''
-
-  if (nameStartsWith) {
-    nameParam = `nameStartsWith=${nameStartsWith}&`
-  }
-
-  return `${ROOT_MARVEL_API_URL}/characters?limit=${limit}&offset=${
-    page * limit
-  }&${nameParam}apikey=${process.env.NEXT_PUBLIC_API_PUBLIC_KEY}`
-}
+import { getCharactersList, ROOT_MARVEL_API_URL } from './functions'
 
 export class MarvelCharactersApiService {
   static async getPaginated(

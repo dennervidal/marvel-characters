@@ -6,10 +6,23 @@ import { Theme, useMediaQuery } from '@material-ui/core'
 import { useCharactersPaginate } from '../hooks'
 import { MainDiv } from '../styles/styled'
 import { SearchHeader } from '../components/SearchHeader'
-import { NextPage } from 'next'
+import { GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { Character } from '../types'
+import { getInitialPropsUrl } from '../service/functions'
 
-const Index: NextPage = () => {
+export const getStaticProps: GetStaticProps = async _ => {
+  const response = await fetch(getInitialPropsUrl())
+  const json = await response.json()
+  return {
+    props: { initialData: json?.data?.results, total: json?.data?.total / 10 }
+  }
+}
+
+export const Index: NextPage<{ initialData?: Character[]; total: number }> = ({
+  initialData,
+  total: _total
+}) => {
   const theme: Theme = useTheme()
   const router = useRouter()
   const mobile = !useMediaQuery(theme.breakpoints.up('sm'))
@@ -19,7 +32,9 @@ const Index: NextPage = () => {
   const { results: characters, loading } = useCharactersPaginate({
     nameStartsWith: query ? String(query) : undefined,
     setTotal,
-    page
+    page,
+    initialData,
+    total: _total
   })
 
   return (

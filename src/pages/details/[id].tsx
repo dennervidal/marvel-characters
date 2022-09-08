@@ -1,43 +1,46 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import { useCharacterComicsById } from 'hooks/useCharacterComicsById'
 import { LoadingPlaceholder } from 'components/LoadingPlaceholder'
-import { routes } from 'routes/routes'
 import { ComicPreview } from 'components/ComicPreview'
 import { useCharacterById } from 'hooks/useCharacterById'
-import { DetailImg, GridPadding } from './styled'
-import { useNavigate } from 'react-router'
+import { useRouter } from 'next/router'
+import { NextPage } from 'next'
+import { DetailImg, GridPadding } from 'styles/details'
 
-const Details = () => {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const {
-    result: comics,
-    error,
-    loading
-  } = useCharacterComicsById({
-    id
+const CharacterDetail: NextPage = () => {
+  const router = useRouter()
+  const { id } = router.query
+  const { result: comics, loading } = useCharacterComicsById({
+    id: String(id)
   })
-  const { result: character, loading: charLoad } = useCharacterById({
-    id
+  const {
+    result: character,
+    loading: charLoad,
+    error
+  } = useCharacterById({
+    id: String(id)
   })
 
   useEffect(() => {
-    if (error) {
-      routes.NOT_FOUND.redirect(navigate)
+    if (Boolean(error)) {
+      router.push('/404').then()
     }
-  }, [error, navigate])
+  }, [error, router])
 
   return (
     <Grid spacing={0} container>
       <LoadingPlaceholder loading={loading && charLoad}>
         <Grid item xs={12} md={4}>
-          <DetailImg
-            src={`${character?.thumbnail?.path}.${character?.thumbnail?.extension}`}
-            alt='thumbnail'
-          />
+          {character?.thumbnail?.path && (
+            <DetailImg
+              width={490}
+              height={490}
+              src={`${character?.thumbnail?.path}.${character?.thumbnail?.extension}`}
+              alt='thumbnail'
+            />
+          )}
         </Grid>
         <GridPadding item container xs={12} md={8} spacing={1}>
           {character?.name && (
@@ -60,4 +63,4 @@ const Details = () => {
   )
 }
 
-export { Details }
+export default CharacterDetail

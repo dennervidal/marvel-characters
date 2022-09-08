@@ -9,10 +9,8 @@ import {
   RowDiv,
   Avatar
 } from './styled'
-import PropTypes from 'prop-types'
-import { routes } from 'routes'
-import { useNavigate } from 'react-router'
 import { Character } from 'types'
+import { useRouter } from 'next/router'
 
 export const CharactersTable = ({
   characters,
@@ -21,7 +19,11 @@ export const CharactersTable = ({
   characters: Character[] | undefined
   mobile: boolean
 }) => {
-  const navigate = useNavigate()
+  const router = useRouter()
+  const redirectToDetails = (id?: string | number) => {
+    router.push(`/details/${id}`).then()
+  }
+
   return (
     <Table>
       <TableHead>
@@ -54,14 +56,17 @@ export const CharactersTable = ({
             <TableRow
               key={`${name}-${idx}`}
               mobile={mobile}
-              onClick={() => routes.DETAILS.redirect(navigate, id)}
+              onClick={() => redirectToDetails(id)}
             >
               <TableCell>
                 <RowDiv>
-                  <Avatar
-                    variant='rounded'
-                    src={`${thumbnail?.path}.${thumbnail?.extension}`}
-                  />
+                  {thumbnail?.path && (
+                    <Avatar
+                      width={48}
+                      height={48}
+                      src={`${thumbnail?.path}.${thumbnail?.extension}`}
+                    />
+                  )}
                   <Typography
                     variant='subtitle2'
                     fontWeight={600}
@@ -96,11 +101,4 @@ export const CharactersTable = ({
       </TableBody>
     </Table>
   )
-}
-
-CharactersTable.propTypes = {
-  /** characters data */
-  characters: PropTypes.array,
-  /** boolean that represents if it is mobile view  */
-  mobile: PropTypes.bool
 }

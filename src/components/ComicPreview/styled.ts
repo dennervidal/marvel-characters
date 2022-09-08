@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import { Grid, Typography as MuiTypography } from '@material-ui/core'
+import Image from 'next/image'
 
-export const ComicImg = styled.img`
+export const ComicImg = styled(Image)`
   max-width: 100px;
   margin: ${({ theme }) => theme.spacing(1 / 2)}px;
 `

@@ -17,7 +17,7 @@ const getCharactersList = ({
 
   return `${ROOT_MARVEL_API_URL}/characters?limit=${limit}&offset=${
     page * limit
-  }&${nameParam}apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
+  }&${nameParam}apikey=${process.env.NEXT_PUBLIC_API_PUBLIC_KEY}`
 }
 
 export class MarvelCharactersApiService {
@@ -27,23 +27,32 @@ export class MarvelCharactersApiService {
     limit: number
   ) {
     return await fetch(getCharactersList({ nameStartsWith, page, limit }))
-      .then(async response => await response.json())
+      .then(async response => {
+        if (response.status != 200) throw Error(String(response.status))
+        return await response.json()
+      })
       .then(responseJson => responseJson?.data)
   }
 
   static async getById(charId: string | number | undefined) {
     return await fetch(
-      `${ROOT_MARVEL_API_URL}/characters/${charId}?apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
+      `${ROOT_MARVEL_API_URL}/characters/${charId}?apikey=${process.env.NEXT_PUBLIC_API_PUBLIC_KEY}`
     )
-      .then(async response => await response.json())
+      .then(async response => {
+        if (response.status != 200) throw Error(String(response.status))
+        return await response.json()
+      })
       .then(responseJson => responseJson?.data)
   }
 
   static async getByIdComics(charId: string | number | undefined) {
     return await fetch(
-      `${ROOT_MARVEL_API_URL}/characters/${charId}/comics?apikey=${process.env.REACT_APP_API_PUBLIC_KEY}`
+      `${ROOT_MARVEL_API_URL}/characters/${charId}/comics?apikey=${process.env.NEXT_PUBLIC_API_PUBLIC_KEY}`
     )
-      .then(async response => await response.json())
+      .then(async response => {
+        if (response.status != 200) throw Error(String(response.status))
+        return await response.json()
+      })
       .then(responseJson => responseJson?.data)
   }
 }

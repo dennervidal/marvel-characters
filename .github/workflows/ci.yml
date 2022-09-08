@@ -16,13 +16,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: install
-        run: yarn
+        run: pnpm intall
 
       - name: lint
-        run: yarn eslint:fix:dry
+        run: pnpm run lint
 
       - name: cache
         uses: actions/cache@v3
@@ -48,7 +48,7 @@ jobs:
           key: ${{ github.sha }}
 
       - name: test
-        run: yarn test:ci
+        run: pnpm run test:ci
 
   build:
     runs-on: ubuntu-latest
@@ -68,8 +68,8 @@ jobs:
 
       - name: build
         env:
-          REACT_APP_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
-        run: yarn build
+          NEXT_PUBLIC_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
+        run: pnpm run build
 
       - name: cache
         uses: actions/cache@v3
@@ -94,11 +94,6 @@ jobs:
         with:
           path: ./*
           key: ${{ github.sha }}
-          
-#      - name: Build app
-#        env:
-#          REACT_APP_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
-#        run: yarn build
           
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3

@@ -2,12 +2,11 @@ import React, { useContext } from 'react'
 import Pagination from '@material-ui/lab/Pagination'
 import { PaginationContext } from 'context'
 import { MainDiv } from './styled'
-import { useLocation } from 'react-router-dom'
+import { useRouter } from 'next/router'
 
 export const Navigation = () => {
-  const location = useLocation()
-
-  const isDetails = location.pathname.startsWith('/details')
+  const router = useRouter()
+  const isDetails = router.pathname.includes('/details')
   const { page, total, gotoPage } = useContext(PaginationContext)
 
   return (

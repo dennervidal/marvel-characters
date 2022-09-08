@@ -2,3 +2,4 @@ node_modules
 /*.js
 *.test.tsx
 react-app-env.d.ts
+next-env.d.ts

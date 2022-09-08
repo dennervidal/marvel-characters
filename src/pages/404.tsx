@@ -1,6 +1,6 @@
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
-import { Container, Link, SubContainer, TextContainer } from './styled'
+import { Container, Link, SubContainer, TextContainer } from '../styles/styled'
 
 const NotFound = () => (
   <Container>
@@ -20,4 +20,4 @@ const NotFound = () => (
   </Container>
 )
 
-export { NotFound }
+export default NotFound

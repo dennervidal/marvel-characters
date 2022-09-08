@@ -10,7 +10,7 @@ You can access the deployed app [here](https://master.d20kbch1h1r0t5.amplifyapp.
 ## getting started
 
 First of all, you will need a Marvel developer account API key from [here](https://developer.marvel.com) 
-and then create a `.env` file or set the environment variable named `REACT_APP_API_PUBLIC_KEY` (`.env.example` file is on this repo root).
+and then create a `.env` file or set the environment variable named `NEXT_PUBLIC_API_PUBLIC_KEY` (`.env.example` file is on this repo root).
 
 After that, make sure you have:
  - `yarn` >= 1.12

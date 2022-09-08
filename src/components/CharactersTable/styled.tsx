@@ -4,9 +4,9 @@ import {
   Table as MuiTable,
   TableCell as MuiTCell,
   TableRow as MuiTRow,
-  Typography as MuiTypography,
-  Avatar as MuiAvatar
+  Typography as MuiTypography
 } from '@material-ui/core'
+import Image from 'next/image'
 
 export const ColumnDiv = styled.div`
   display: flex;
@@ -79,9 +79,8 @@ export const Typography = styled(
   }
 `
 
-export const Avatar = styled(MuiAvatar)`
-  && {
-    width: 48px;
-    height: 48px;
-  }
+export const Avatar = styled(Image)`
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
 `

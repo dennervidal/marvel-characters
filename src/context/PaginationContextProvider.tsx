@@ -1,5 +1,4 @@
 import React, { ReactNode, useState } from 'react'
-import PropTypes from 'prop-types'
 import { PaginationContext } from './PaginationContextType'
 
 const PaginationContextProvider = ({ children }: { children: ReactNode }) => {
@@ -26,10 +25,6 @@ const PaginationContextProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </PaginationContext.Provider>
   )
-}
-
-PaginationContextProvider.propTypes = {
-  children: PropTypes.element.isRequired
 }
 
 export { PaginationContextProvider }

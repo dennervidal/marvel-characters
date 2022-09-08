@@ -1,5 +1,6 @@
 /* eslint no-console: 0 */
 import React, { CSSProperties, ErrorInfo, ReactNode } from 'react'
+import Link from 'next/link'
 
 const style: CSSProperties = { textAlign: 'center' }
 const sadFaceEmoji = `:'(`
@@ -32,14 +33,14 @@ class ErrorBoundary extends React.Component<Props, State> {
     const { state, props } = this
 
     if (state.hasError) {
-      console.log('hasError')
+      console.error('hasError')
 
       return (
         <div style={style}>
           <h1>{sadFaceEmoji}</h1>
           <br />
           <h1>Algum Erro Aconteceu, estamos tristes</h1>
-          <a href='/'>Volte aqui</a>
+          <Link href='/'>Volte aqui</Link>
         </div>
       )
     }

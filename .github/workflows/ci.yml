@@ -78,28 +78,28 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-  deploy:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-    needs: build
-    if: ${{ github.ref == 'refs/heads/master' }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: restore
-        uses: actions/cache@v3
-        id: ci-build-cache
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-          
-      - name: deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy to GitHub pages:'
+#  deploy:
+#    runs-on: ubuntu-latest
+#    concurrency:
+#      group: ${{ github.workflow }}-${{ github.ref }}
+#      cancel-in-progress: true
+#    needs: build
+#    if: ${{ github.ref == 'refs/heads/master' }}
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: restore
+#        uses: actions/cache@v3
+#        id: ci-build-cache
+#        with:
+#          path: ./*
+#          key: ${{ github.sha }}
+#
+#      - name: deploy
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: ./build
+#          user_name: 'github-actions[bot]'
+#          user_email: 'github-actions[bot]@users.noreply.github.com'
+#          commit_message: 'Deploy to GitHub pages:'

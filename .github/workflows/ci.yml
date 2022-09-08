@@ -21,7 +21,7 @@ jobs:
           cache: 'pnpm'
 
       - name: install
-        run: pnpm intall
+        run: pnpm install
 
       - name: lint
         run: pnpm run lint

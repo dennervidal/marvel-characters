@@ -35,7 +35,7 @@ export function useCharactersPaginate({
     setLoading(true)
     if (Boolean(initialData) && page === 0 && isEmpty(nameStartsWith)) {
       setResults(initialData)
-      setTotal(_total)
+      setTotal(Math.ceil(_total / PAGE_LIMIT))
       setLoading(false)
     } else {
       MarvelCharactersApiService.getPaginated(nameStartsWith, page, PAGE_LIMIT)

@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
-import { usePaginationContext } from '../../hooks/usePaginationContext'
-import { useMobile } from '../../hooks/useMobile'
-import { isEmpty } from '../../utils'
+import { usePaginationContext, useMobile } from 'hooks'
+import { isEmpty } from 'utils'
 
 export const useSearchHeader = (query: string | undefined | null) => {
   const router = useRouter()

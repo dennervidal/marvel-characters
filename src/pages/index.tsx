@@ -5,7 +5,7 @@ import { SearchHeader } from '../components/SearchHeader'
 import { GetStaticProps, NextPage } from 'next'
 import { Character } from '../types'
 import { getInitialPropsUrl } from '../service/functions'
-import { useIndex } from './_hooks/useIndex'
+import { useIndex } from 'hooks'
 
 export const getStaticProps: GetStaticProps = async _ => {
   const response = await fetch(getInitialPropsUrl())

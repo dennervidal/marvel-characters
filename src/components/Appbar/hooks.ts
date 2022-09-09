@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
-import { usePaginationContext } from '../../hooks/usePaginationContext'
+import { usePaginationContext } from 'hooks'
 
 export const useAppbar = () => {
   const router = useRouter()

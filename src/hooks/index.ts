@@ -1,2 +1,8 @@
 export { useCharactersPaginate } from './useCharactersPaginate'
+export { useIndex } from './useIndex'
+export { useDetails } from './useDetails'
+export { useMobile } from './useMobile'
+export { useCharacterById } from './useCharacterById'
+export { useCharacterComicsById } from './useCharacterComicsById'
+export { usePaginationContext } from './usePaginationContext'
 export { useWindowSize } from './useWindowSize'

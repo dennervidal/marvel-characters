@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
-import { useMobile } from '../../hooks/useMobile'
+import { useMobile } from 'hooks'
 
 export const useCharactersTable = () => {
   const router = useRouter()

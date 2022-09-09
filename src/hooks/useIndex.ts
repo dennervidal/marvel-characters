@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import { useCharactersPaginate } from '../../hooks'
-import { Character } from '../../types'
-import { usePaginationContext } from '../../hooks/usePaginationContext'
+import { useCharactersPaginate } from './useCharactersPaginate'
+import { Character } from '../types'
+import { usePaginationContext } from './usePaginationContext'
 
 export const useIndex = (
   initialData: Character[] | undefined,

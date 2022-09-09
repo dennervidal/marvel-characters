@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { useCharacterComicsById } from '../../hooks/useCharacterComicsById'
-import { useCharacterById } from '../../hooks/useCharacterById'
+import { useCharacterComicsById } from './useCharacterComicsById'
+import { useCharacterById } from './useCharacterById'
 import { useEffect } from 'react'
 
 export const useDetails = () => {

@@ -5,7 +5,7 @@ import { LoadingPlaceholder } from 'components/LoadingPlaceholder'
 import { ComicPreview } from 'components/ComicPreview'
 import { NextPage } from 'next'
 import { DetailImg, GridPadding } from 'styles/details'
-import { useDetails } from '../_hooks/useDetails'
+import { useDetails } from 'hooks'
 
 const CharacterDetail: NextPage = () => {
   const { loading, character, comics } = useDetails()

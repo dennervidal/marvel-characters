@@ -74,7 +74,8 @@ jobs:
 
       - name: build
         env:
-          NEXT_PUBLIC_API_PUBLIC_KEY: ${{ secrets.REACT_APP_API_PUBLIC_KEY }}
+          NEXT_PUBLIC_API_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_API_PUBLIC_KEY }}
+          MARVEL_PRIVATE_KEY: ${{ secrets.MARVEL_PRIVATE_KEY }}
         run: pnpm run build
 
       - name: cache

@@ -1,6 +1,6 @@
 import { AppBar, Toolbar } from '@material-ui/core'
 import { LogoImg, Title } from './styled'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { PaginationContext } from 'context'
 

@@ -8,7 +8,7 @@ export const Appbar = ({ mobile }: { mobile: boolean }) => {
   const router = useRouter()
   const { gotoPage } = useContext(PaginationContext)
   const onClickImage = () => {
-    gotoPage(0)
+    gotoPage(1)
     router.push('/').then()
   }
 

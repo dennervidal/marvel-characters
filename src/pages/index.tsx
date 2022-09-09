@@ -15,7 +15,7 @@ export const getStaticProps: GetStaticProps = async _ => {
   const response = await fetch(getInitialPropsUrl())
   const json = await response.json()
   return {
-    props: { initialData: json?.data?.results, total: json?.data?.total / 10 }
+    props: { initialData: json?.data?.results ?? null, total: (json?.data?.total ?? 0) / 10 }
   }
 }
 

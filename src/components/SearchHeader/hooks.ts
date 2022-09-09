@@ -1,17 +1,19 @@
 import { useRouter } from 'next/router'
-import React, { useCallback, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePaginationContext } from '../../hooks/usePaginationContext'
 import { useMobile } from '../../hooks/useMobile'
+import { isEmpty } from '../../utils'
 
 export const useSearchHeader = (query: string | undefined | null) => {
   const router = useRouter()
   const mobile = useMobile()
   const { gotoPage } = usePaginationContext()
-  const [search, setSearch] = useState<string>(query ?? '') // TODO: change to useRef
+  const inputRef = useRef<HTMLInputElement>()
 
   const redirectToSearch = () => {
+    const value = inputRef.current?.value
     gotoPage(1)
-    router.push(`/search?query=${search}`).then()
+    router.push(`/?query=${value}`).then()
   }
 
   const onKeyDown = (e: { key: string; preventDefault: () => void }) => {
@@ -21,11 +23,17 @@ export const useSearchHeader = (query: string | undefined | null) => {
     }
   }
 
-  const handleInputSearch = useCallback(
-    (e: { target: { value: React.SetStateAction<string> } }) =>
-      setSearch(e?.target?.value),
-    []
-  )
+  useEffect(() => {
+    if (isEmpty(query)) {
+      // @ts-ignore
+      inputRef.current.value = ''
+    }
+  }, [query])
 
-  return { mobile, search, onKeyDown, redirectToSearch, handleInputSearch }
+  return {
+    mobile,
+    onKeyDown,
+    redirectToSearch,
+    inputRef
+  }
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { MarvelCharactersApiService } from 'service'
 import { Character } from '../types'
 import { PAGE_LIMIT } from '../service/functions'
+import { isEmpty } from '../utils'
 
 type UseCharactersPaginateParams = {
   nameStartsWith: string | undefined | null
@@ -15,9 +16,6 @@ type UseCharactersPaginateReturn = {
   loading: boolean
   error: any
 }
-
-const isEmpty = (value: string | undefined | null): boolean =>
-  value === undefined || value === null || value === ''
 
 export function useCharactersPaginate({
   nameStartsWith = undefined,

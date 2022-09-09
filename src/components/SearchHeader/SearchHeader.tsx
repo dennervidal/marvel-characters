@@ -9,7 +9,7 @@ export const SearchHeader = ({
 }: {
   query: string | null | undefined
 }) => {
-  const { search, onKeyDown, redirectToSearch, handleInputSearch, mobile } =
+  const { onKeyDown, redirectToSearch, mobile, inputRef } =
     useSearchHeader(query)
 
   return (
@@ -25,12 +25,12 @@ export const SearchHeader = ({
         Character name
       </Typography>
       <Input
+        inputRef={inputRef}
         variant='outlined'
         placeholder='Search'
         size='small'
         onKeyDown={onKeyDown}
-        value={search}
-        onChange={handleInputSearch}
+        defaultValue={query}
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>

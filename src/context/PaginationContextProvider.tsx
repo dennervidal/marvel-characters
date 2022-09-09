@@ -1,17 +1,17 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useCallback, useState } from 'react'
 import { PaginationContext } from './PaginationContextType'
 
 const PaginationContextProvider = ({ children }: { children: ReactNode }) => {
   const [page, _setPage] = useState<number>(1)
   const [total, _setTotal] = useState<number>(0)
 
-  const gotoPage = (pageNumber: number) => {
+  const gotoPage = useCallback((pageNumber: number) => {
     _setPage(pageNumber)
-  }
+  }, [])
 
-  const setTotal = (totalNumber: number) => {
+  const setTotal = useCallback((totalNumber: number) => {
     _setTotal(totalNumber)
-  }
+  }, [])
 
   return (
     <PaginationContext.Provider

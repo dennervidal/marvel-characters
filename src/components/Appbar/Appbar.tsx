@@ -1,17 +1,10 @@
 import { AppBar, Toolbar } from '@material-ui/core'
 import { LogoImg, Title } from './styled'
-import React, { useContext } from 'react'
-import { useRouter } from 'next/router'
-import { PaginationContext } from 'context'
+import React from 'react'
+import { useAppbar } from './hooks'
 
 export const Appbar = ({ mobile }: { mobile: boolean }) => {
-  const router = useRouter()
-  const { gotoPage } = useContext(PaginationContext)
-  const onClickImage = () => {
-    gotoPage(1)
-    router.push('/').then()
-  }
-
+  const { onClickImage } = useAppbar()
   return (
     <AppBar variant='outlined' position='fixed'>
       <Toolbar>

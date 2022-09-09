@@ -1,32 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { InputAdornment } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { IconButton, Input, SearchDiv, Typography } from './styled'
-import { useRouter } from 'next/router'
+import { useSearchHeader } from './hooks'
 
 export const SearchHeader = ({
-  mobile,
-  query,
-  setPage
+  query
 }: {
-  mobile: boolean
   query: string | null | undefined
-  setPage: (page: number) => void
 }) => {
-  const router = useRouter()
-  const [search, setSearch] = useState<string>(query ?? '')
-
-  const redirectToSearch = () => {
-    setPage(1)
-    router.push(`/search?query=${search}`).then()
-  }
-
-  const onKeyDown = (e: { key: string; preventDefault: () => void }) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      redirectToSearch()
-    }
-  }
+  const { search, onKeyDown, redirectToSearch, handleInputSearch, mobile } =
+    useSearchHeader(query)
 
   return (
     <SearchDiv mobile={mobile}>
@@ -46,9 +30,7 @@ export const SearchHeader = ({
         size='small'
         onKeyDown={onKeyDown}
         value={search}
-        onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
-          setSearch(e?.target?.value)
-        }
+        onChange={handleInputSearch}
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>

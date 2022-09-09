@@ -1,13 +1,10 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Pagination from '@material-ui/lab/Pagination'
-import { PaginationContext } from 'context'
 import { MainDiv } from './styled'
-import { useRouter } from 'next/router'
+import { useNavigation } from './hooks'
 
 export const Navigation = () => {
-  const router = useRouter()
-  const isDetails = router.pathname.includes('/details')
-  const { page, total, gotoPage } = useContext(PaginationContext)
+  const { isDetails, page, total, handlePageChange } = useNavigation()
 
   return (
     <MainDiv isDetails={isDetails}>
@@ -17,7 +14,7 @@ export const Navigation = () => {
         showLastButton={page < total}
         count={total}
         page={page}
-        onChange={(_, pageNumber) => gotoPage(pageNumber)}
+        onChange={handlePageChange}
         siblingCount={0}
         hideNextButton={page === total}
         hidePrevButton={page === 1}

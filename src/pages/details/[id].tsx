@@ -1,37 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
-import { useCharacterComicsById } from 'hooks/useCharacterComicsById'
 import { LoadingPlaceholder } from 'components/LoadingPlaceholder'
 import { ComicPreview } from 'components/ComicPreview'
-import { useCharacterById } from 'hooks/useCharacterById'
-import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import { DetailImg, GridPadding } from 'styles/details'
+import { useDetails } from '../_hooks/useDetails'
 
 const CharacterDetail: NextPage = () => {
-  const router = useRouter()
-  const { id } = router.query
-  const { result: comics, loading } = useCharacterComicsById({
-    id: String(id)
-  })
-  const {
-    result: character,
-    loading: charLoad,
-    error
-  } = useCharacterById({
-    id: String(id)
-  })
-
-  useEffect(() => {
-    if (Boolean(error)) {
-      router.push('/404').then()
-    }
-  }, [error, router])
-
+  const { loading, character, comics } = useDetails()
   return (
     <Grid spacing={0} container>
-      <LoadingPlaceholder loading={loading && charLoad}>
+      <LoadingPlaceholder loading={loading}>
         <Grid item xs={12} md={4}>
           {character?.thumbnail?.path && (
             <DetailImg

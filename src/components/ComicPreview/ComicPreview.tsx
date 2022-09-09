@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core'
 import { ComicGrid, ComicImg, Typography } from './styled'
 import { Comic } from '../../types'
 
+// TODO: refactor to data component
 const ComicPreview = ({ comics }: { comics?: Comic[] }) => {
   return (
     <Grid container>

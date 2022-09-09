@@ -5,7 +5,7 @@ export const MainDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0px 24px 0px 24px;
+  padding: 0 24px 0 24px;
 `
 // 404
 export const Container = styled.div`
@@ -15,12 +15,12 @@ export const Container = styled.div`
 
 export const SubContainer = styled.div`
   background-color: #f0131e;
-  tex-align: left;
+  text-align: left;
 `
 
 export const TextContainer = styled.div`
   text-align: left;
-  margin: 16px 0px 16px 0px;
+  margin: 16px 0 16px 0;
 `
 
 export const Link = styled.a`

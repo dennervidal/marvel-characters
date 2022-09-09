@@ -10,19 +10,14 @@ import {
   Avatar
 } from './styled'
 import { Character } from 'types'
-import { useRouter } from 'next/router'
+import { useCharactersTable } from './hooks'
 
 export const CharactersTable = ({
-  characters,
-  mobile
+  characters
 }: {
   characters: Character[] | undefined
-  mobile: boolean
 }) => {
-  const router = useRouter()
-  const redirectToDetails = (id?: string | number) => {
-    router.push(`/details/${id}`).then()
-  }
+  const { redirectToDetails, mobile } = useCharactersTable()
 
   return (
     <Table>

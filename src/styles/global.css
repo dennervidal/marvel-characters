@@ -14,20 +14,33 @@
   --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
 }
 
+@layer base {
+  * {
+    border-radius: 0;
+  }
+}
+
 @layer components {
   .brutal-btn {
-    box-shadow: 4px 4px 0 0 #000;
+    --brutal-shadow: #000;
+    box-shadow: 4px 4px 0 0 var(--brutal-shadow);
     transition:
       transform 0.08s ease,
       box-shadow 0.08s ease;
   }
   .brutal-btn:hover:not(:disabled) {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 0 #000;
+    box-shadow: 6px 6px 0 0 var(--brutal-shadow);
   }
   .brutal-btn:active:not(:disabled) {
     transform: translate(2px, 2px);
-    box-shadow: 0 0 0 0 #000;
+    box-shadow: 0 0 0 0 var(--brutal-shadow);
+  }
+  .brutal-btn-yellow {
+    --brutal-shadow: #ffe600;
+  }
+  .brutal-btn-red {
+    --brutal-shadow: #ff2d2d;
   }
 }
 

@@ -1,69 +1,43 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { MOCK_CHARACTERS } from './mock-data'
 import {
   fetchCharacterById,
   fetchCharacterComics,
   fetchCharacters
 } from './marvel-client'
 
-describe('marvel-client', () => {
-  const mockFetch = vi.fn()
-
-  beforeEach(() => {
-    vi.stubEnv('PUBLIC_MARVEL_API_KEY', 'public-key-123')
-    vi.stubEnv('MARVEL_PRIVATE_KEY', 'private-key-456')
-    vi.stubGlobal('fetch', mockFetch)
-    mockFetch.mockClear()
-  })
-
-  afterEach(() => {
-    vi.unstubAllEnvs()
-    vi.unstubAllGlobals()
-  })
-
-  it('returns results and total', async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        data: { results: [{ id: 1, name: 'Thor' }], total: 100 }
-      })
-    })
+describe('marvel-client (mock provider)', () => {
+  it('returns the first page and the raw total', async () => {
     const { results, total } = await fetchCharacters({ page: 0, limit: 10 })
-    expect(results[0].name).toBe('Thor')
-    expect(total).toBe(100)
-    expect(mockFetch.mock.calls[0][0]).toContain('/characters?')
-    expect(mockFetch.mock.calls[0][0]).toContain('offset=0')
+    expect(total).toBe(MOCK_CHARACTERS.length)
+    expect(results).toHaveLength(10)
+    expect(results[0].id).toBe(MOCK_CHARACTERS[0].id)
   })
 
-  it('adds nameStartsWith when provided', async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({ data: { results: [], total: 0 } })
+  it('filters by name prefix, case-insensitive', async () => {
+    const { results, total } = await fetchCharacters({
+      nameStartsWith: 'IRON'
     })
-    await fetchCharacters({ nameStartsWith: 'Th', page: 2, limit: 10 })
-    expect(mockFetch.mock.calls[0][0]).toContain('nameStartsWith=Th')
-    expect(mockFetch.mock.calls[0][0]).toContain('offset=20')
+    expect(total).toBeGreaterThan(0)
+    expect(results.every(c => c.name?.toLowerCase().startsWith('iron'))).toBe(
+      true
+    )
   })
 
-  it('throws on non-ok responses', async () => {
-    mockFetch.mockResolvedValue({ ok: false, status: 429 })
-    await expect(fetchCharacters({})).rejects.toThrow('Marvel API error: 429')
+  it('paginates with a 0-based offset', async () => {
+    const { results } = await fetchCharacters({ page: 1, limit: 10 })
+    expect(results[0].id).toBe(MOCK_CHARACTERS[10].id)
   })
 
-  it('returns the first character for fetchCharacterById', async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({ data: { results: [{ id: 1, name: 'Thor' }] } })
-    })
-    const character = await fetchCharacterById(1)
-    expect(character?.name).toBe('Thor')
+  it('returns the character by id', async () => {
+    expect((await fetchCharacterById(7))?.name).toBe(MOCK_CHARACTERS[6].name)
+    expect(await fetchCharacterById('999999')).toBeUndefined()
   })
 
-  it('returns comics list for fetchCharacterComics', async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({ data: { results: [{ id: 9, title: 'Thor #1' }] } })
-    })
+  it('returns deterministic comics per character', async () => {
     const comics = await fetchCharacterComics(1)
-    expect(comics[0].title).toBe('Thor #1')
+    expect(comics.length).toBeGreaterThanOrEqual(3)
+    expect(comics[0].title).toMatch(/#\d+$/)
+    expect(await fetchCharacterComics(999999)).toEqual([])
   })
 })

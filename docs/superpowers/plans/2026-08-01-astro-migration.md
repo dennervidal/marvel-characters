@@ -4,7 +4,9 @@
 
 **Goal:** Migrate the Next.js 12 / MUI v4 / styled-components app to Astro 6 + React 19 islands + Tailwind v4 custom design system, on the Cloudflare adapter with Vitest, ESLint 10 flat config, Prettier 3, TypeScript latest, Node 24 LTS.
 
-**Architecture:** Astro `static` output (Astro 5+ merged `hybrid` into `static`: pages/endpoints default to prerendered; per-route `export const prerender = false` opts into on-demand rendering with the Cloudflare adapter) with a single React island (`CharactersExplorer`, TanStack Query v5) on the home page; all Marvel API calls signed server-side with Web Crypto through `src/lib/marvel/`; details pages prerendered via `getStaticPaths` with on-demand fallback. Design tokens in `src/styles/global.css` (`@theme`), UI primitives in `src/components/ui/`.
+**Architecture:** Astro `static` output (Astro 5+ merged `hybrid` into `static`: pages/endpoints default to prerendered; per-route `export const prerender = false` opts into on-demand rendering with the Cloudflare adapter) with a single React island (`CharactersExplorer`, TanStack Query v5) on the home page; all data access through the `src/lib/marvel/` client seam (server-only); details pages prerendered via `getStaticPaths` with on-demand fallback. Design tokens in `src/styles/global.css` (`@theme`), UI primitives in `src/components/ui/`.
+
+> **REVISION (2026-08-01): the Marvel API is dead.** Verified: `gateway.marvel.com` returns `500 {"message":"Internal server error"}` for every endpoint, even unauthenticated. Tasks 2–3 were executed against Marvel before this was discovered. **Task 3R replaces the client with a deterministic mock provider** (same exported interface, no network) so Tasks 5–8 build and deploy fully. A follow-up plan (new session, new plan doc) will integrate the **SuperHero API** (`https://superheroapi.com/api/<TOKEN>/...`, token in path — `TOKEN` is already in `.env`; endpoints: `/search/name` (no pagination, no limit params), `/id` (+ `/powerstats`, `/biography`, `/appearance`, `/work`, `/connections`, `/image`); data includes powerstats/group-affiliation/full-name but **no comics data** — the COMIC APPEARANCES UI section must be redesigned; images are superherodb portraits; responses are `{response: "success", ...}`; note the API answers 302 on the bare URL and follows to the real one).
 
 **Tech Stack:** astro latest (resolves 7.x — `hybrid` merged into `static`), @astrojs/cloudflare (14.x), @astrojs/react, react ^19, @tanstack/react-query ^5, tailwindcss ^4 + @tailwindcss/vite, vitest (standalone `defineConfig` — `getViteConfig` breaks under the cloudflare adapter's Vite plugins), eslint ^10 flat config, prettier ^3 + prettier-plugin-astro, typescript ^6.0.3 pinned (7.x breaks `astro check` peer and typescript-eslint), husky 9 + lint-staged 16, pnpm, Node 24.
 
@@ -13,10 +15,10 @@
 - Node 24 LTS (`.nvmrc` = `24`); engines `>=22.12.0`. Package manager is **pnpm** only — never add package-lock/yarn.lock.
 - Repo style (prettier): no semicolons, single quotes, no trailing commas, `jsxSingleQuote: true`, `arrowParens: 'avoid'`.
 - Import alias `@/*` → `src/*`. No relative imports across top-level dirs.
-- Server-only code (`src/lib/marvel/**`) must NOT import `node:*` modules (workerd compat): use `globalThis.fetch`, `crypto.randomUUID()`, `crypto.subtle.digest('MD5')`. Never import server-only modules from client islands.
+- Server-only code (`src/lib/marvel/**`) must NOT import `node:*` modules (workerd compat): use `globalThis.fetch`, `crypto.randomUUID()`. Never import server-only modules from client islands. (The MD5 signing code was removed in Task 3R — the mock needs no crypto.)
 - Keep script names `dev`, `build`, `test` (watch), `test:ci` (one-shot), `lint`, `prettify`, `typecheck`.
-- Env: `PUBLIC_MARVEL_API_KEY` (public) + `MARVEL_PRIVATE_KEY` (server secret). Both required for `pnpm build`. `.env` is gitignored; never commit keys.
-- Verify after each task: `pnpm run lint`, `pnpm run typecheck`, `pnpm run test:ci`, and `pnpm run build` where stated. Build requires a populated `.env` — if absent, ask the user for the Marvel keys first.
+- Env: **no required variables** after Task 3R — the mock provider needs nothing. `TOKEN` in `.env` is reserved for the future SuperHero API integration (never reference it from client code). `.env` is gitignored; never commit keys.
+- Verify after each task: `pnpm run lint`, `pnpm run typecheck`, `pnpm run test:ci`, and `pnpm run build` where stated. Build works without any `.env` (mock provider).
 - Commit per task with a concise conventional message (repo style: `feat:`, `chore:`, `test:`). Pre-commit hooks (husky + lint-staged) will reformat staged files; expect and accept that.
 - Do not add code comments beyond what the ported code needs.
 
@@ -24,9 +26,9 @@
 
 ### Task 0: Prerequisites (user, not agent)
 
-- [ ] User creates `.env` from `.env.example` with both Marvel keys (needed from Task 2 onwards for builds; builds fail without them). ✅ done — `.env` exists.
+- [ ] User creates `.env` from `.env.example` with both Marvel keys (needed from Task 2 onwards for builds; builds fail without them). ✅ done — `.env` exists. NOTE: superseded by the Marvel-API-is-dead revision — the mock provider (Task 3R) needs NO env vars; the Marvel keys in `.env` are now unused and can stay or be removed. `TOKEN=` (SuperHero API, 32 chars) was user-added and is reserved for the follow-up plan.
 - [ ] User drops design materials (screenshots, CSS tokens, component examples) into `design/` (needed for Task 4). ✅ done — 7 screenshots in `design/`; tokens extracted to `design/design-tokens.md` (Gemini 3.6 Flash vision).
-- [ ] User updates GitHub repo secrets: rename `NEXT_PUBLIC_API_PUBLIC_KEY` → `PUBLIC_MARVEL_API_KEY` (keep `MARVEL_PRIVATE_KEY`). ⏳ pending user action — needed only for CI, not local work.
+- [ ] ~~User updates GitHub repo secrets: rename `NEXT_PUBLIC_API_PUBLIC_KEY` → `PUBLIC_MARVEL_API_KEY`~~ — CANCELLED: no Marvel secrets are needed anymore (mock provider, Task 3R also drops the secrets block from the CI workflow).
 
 ---
 
@@ -742,7 +744,7 @@ git commit -m "feat: add server-side marvel service layer with web crypto signin
 
 **Files:**
 
-- Create: `src/pages/api/characters.ts`, `src/pages/api/characters.test.ts`
+- Create: `src/pages/api/characters.ts`, `src/pages/api/_characters.test.ts` — test MUST be `_characters.test.ts` (underscore prefix is Astro's ignore convention): a file named `characters.test.ts` under `src/pages` is treated as a route `/api/characters.test` and breaks the build. Vitest's `src/**/*.test.{ts,tsx}` include still picks it up.
 
 **Interfaces:**
 
@@ -751,7 +753,7 @@ git commit -m "feat: add server-side marvel service layer with web crypto signin
 
 - [ ] **Step 1: Write the failing test**
 
-`src/pages/api/characters.test.ts`:
+`src/pages/api/_characters.test.ts`:
 
 ```ts
 import type { APIContext } from 'astro'
@@ -868,6 +870,177 @@ Run: `pnpm run build` — expected: API route is on-demand, build succeeds.
 ```bash
 git add src/pages/api
 git commit -m "feat: add /api/characters server proxy with pagination"
+```
+
+---
+
+### Task 3R: Mock data provider (Marvel API is dead — replaces the client implementation)
+
+**Why:** Tasks 2–3 shipped a real Marvel client + signing, but `gateway.marvel.com` now returns 500 for everything. This task keeps the plan's architecture (same exported interface, same API route, same `_characters.test.ts` which already mocks the client) but makes the data source a deterministic in-memory mock. A follow-up plan (new doc) will integrate the SuperHero API (`TOKEN` env var is already in `.env`).
+
+**Files:**
+
+- Delete: `src/lib/marvel/signing.ts`, `src/lib/marvel/signing.test.ts`
+- Modify: `src/lib/marvel/constants.ts` (drop `ROOT_MARVEL_API_URL`; keep `PAGE_LIMIT = 10`), `src/lib/marvel/marvel-client.ts` (mock-backed), `src/lib/marvel/marvel-client.test.ts` (rewritten contract tests), `.env.example` (only `TOKEN=`), `.github/workflows/ci.yml` (remove the build step's secrets env block — no env needed)
+- Create: `src/lib/marvel/mock-data.ts`
+- Unchanged: `src/pages/api/characters.ts`, `src/pages/api/_characters.test.ts`
+
+**Interfaces:**
+
+- `mock-data.ts` exports:
+  - `MOCK_CHARACTERS: Character[]` — exactly **300** entries, Marvel-shaped (`id: number`, `name`, `description`, `thumbnail: { path, extension }`). First ~40 are curated real Marvel names (Iron Man, Thor, Thanos, Spider-Man, …) with one-line descriptions; the rest are generated deterministically (fixed name-parts arrays + arithmetic on the index — **no `Math.random()`**, stable across runs). Ids: 1..300. Thumbnail for every entry: `{ path: 'https://picsum.photos/seed/marvel-{id}/640/480', extension: 'jpg' }` (the app builds URLs as `path + '.' + extension`; picsum serves `.jpg` suffixes).
+  - `getMockComics(characterId: number): Comic[]` — deterministic per-character comics: 3–6 entries, `{ id, title: '<NAME> #<n>', thumbnail: { path: 'https://picsum.photos/seed/comic-{charId}-{n}/480/640', extension: 'jpg' } }`; returns `[]` for unknown ids.
+- `marvel-client.ts` keeps the exact exported signatures (page 0-based, `total` = raw count):
+  - `fetchCharacters({ nameStartsWith?, page = 0, limit = PAGE_LIMIT })` — filters `MOCK_CHARACTERS` with **case-insensitive `startsWith`** on name, then slices `[page*limit, page*limit+limit)`; returns `{ results, total: filteredCount }`. No network, never rejects.
+  - `fetchCharacterById(id: string | number)` — finds by numeric id, returns `Character | undefined`.
+  - `fetchCharacterComics(id: string | number)` — `getMockComics(Number(id))`.
+
+- [ ] **Step 1: Write the failing tests**
+
+Rewrite `src/lib/marvel/marvel-client.test.ts` (contract tests, no fetch mocking — there is no network):
+
+```ts
+import { describe, expect, it } from 'vitest'
+import { MOCK_CHARACTERS } from './mock-data'
+import { fetchCharacterById, fetchCharacterComics, fetchCharacters } from './marvel-client'
+
+describe('marvel-client (mock provider)', () => {
+  it('returns the first page and the raw total', async () => {
+    const { results, total } = await fetchCharacters({ page: 0, limit: 10 })
+    expect(total).toBe(MOCK_CHARACTERS.length)
+    expect(results).toHaveLength(10)
+    expect(results[0].id).toBe(MOCK_CHARACTERS[0].id)
+  })
+
+  it('filters by name prefix, case-insensitive', async () => {
+    const { results, total } = await fetchCharacters({ nameStartsWith: 'IRON' })
+    expect(total).toBeGreaterThan(0)
+    expect(results.every(c => c.name?.toLowerCase().startsWith('iron'))).toBe(true)
+  })
+
+  it('paginates with a 0-based offset', async () => {
+    const { results } = await fetchCharacters({ page: 1, limit: 10 })
+    expect(results[0].id).toBe(MOCK_CHARACTERS[10].id)
+  })
+
+  it('returns the character by id', async () => {
+    expect((await fetchCharacterById(7))?.name).toBe(MOCK_CHARACTERS[6].name)
+    expect(await fetchCharacterById('999999')).toBeUndefined()
+  })
+
+  it('returns deterministic comics per character', async () => {
+    const comics = await fetchCharacterComics(1)
+    expect(comics.length).toBeGreaterThanOrEqual(3)
+    expect(comics[0].title).toMatch(/#\d+$/)
+    expect(await fetchCharacterComics(999999)).toEqual([])
+  })
+})
+```
+
+- [ ] **Step 2: Run tests to verify they fail**
+
+Run: `pnpm run test:ci src/lib/marvel`
+Expected: FAIL — `mock-data` module not found (and the current client hits the dead network).
+
+- [ ] **Step 3: Implement the mock provider**
+
+`src/lib/marvel/mock-data.ts` (curated + generated, deterministic — implementer writes the generator; the test above is the contract):
+
+```ts
+import type { Character, Comic } from '@/types'
+
+export const MOCK_CHARACTERS: Character[] = []
+// 1) push ~40 curated real Marvel characters (id 1..40) with one-line descriptions
+// 2) generate ids 41..300 from fixed name-part arrays (no Math.random)
+// thumbnail: { path: `https://picsum.photos/seed/marvel-${id}/640/480`, extension: 'jpg' }
+
+export const getMockComics = (characterId: number): Comic[] => {
+  const character = MOCK_CHARACTERS.find(c => c.id === characterId)
+  if (!character) return []
+  const count = 3 + (characterId % 4) // 3..6
+  return Array.from({ length: count }, (_, i) => ({
+    id: characterId * 100 + i,
+    title: `${character.name} #${i + 1}`,
+    thumbnail: {
+      path: `https://picsum.photos/seed/comic-${characterId}-${i}/480/640`,
+      extension: 'jpg'
+    }
+  }))
+}
+```
+
+`src/lib/marvel/marvel-client.ts` (keep signatures; delete `buildSignedUrl` import and `fetch`/`MarvelData`):
+
+```ts
+import type { Character, Comic } from '@/types'
+import { PAGE_LIMIT } from './constants'
+import { getMockComics, MOCK_CHARACTERS } from './mock-data'
+
+export const fetchCharacters = async ({
+  nameStartsWith,
+  page = 0,
+  limit = PAGE_LIMIT
+}: {
+  nameStartsWith?: string | null
+  page?: number
+  limit?: number
+}): Promise<{ results: Character[]; total: number }> => {
+  const filtered = nameStartsWith
+    ? MOCK_CHARACTERS.filter(c =>
+        c.name?.toLowerCase().startsWith(nameStartsWith.toLowerCase())
+      )
+    : MOCK_CHARACTERS
+  return {
+    results: filtered.slice(page * limit, page * limit + limit),
+    total: filtered.length
+  }
+}
+
+export const fetchCharacterById = async (
+  id: string | number
+): Promise<Character | undefined> =>
+  MOCK_CHARACTERS.find(c => c.id === Number(id))
+
+export const fetchCharacterComics = async (
+  id: string | number
+): Promise<Comic[]> => getMockComics(Number(id))
+```
+
+`src/lib/marvel/constants.ts` — remove `ROOT_MARVEL_API_URL`, keep `PAGE_LIMIT = 10`.
+
+`.env.example`:
+
+```
+TOKEN=
+```
+
+`.github/workflows/ci.yml` — replace the build step with:
+
+```yaml
+      - run: pnpm run build
+```
+
+- [ ] **Step 4: Run tests to verify they pass**
+
+Run: `pnpm run test:ci src/lib/marvel src/pages/api`
+Expected: PASS (5 client + 3 route + 2 utils).
+
+- [ ] **Step 5: Verify lint/typecheck/build**
+
+Run: `pnpm run lint && pnpm run typecheck && pnpm run build` — build stays server output (API route is on-demand).
+
+- [ ] **Step 6: Dev smoke test**
+
+Start `pnpm run dev` (timeout), then:
+- `curl 'http://localhost:4321/api/characters?limit=3'` → HTTP 200, JSON with 3 mock characters
+- `curl 'http://localhost:4321/api/characters?q=iron&page=1&limit=2'` → 200, filtered results
+Kill the server.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add -A
+git commit -m "feat: replace marvel api client with mock data provider"
 ```
 
 ---
@@ -2074,11 +2247,11 @@ git commit -m "feat: add appbar and error boundary shell"
 
 - [ ] **Step 1: Rewrite README.md**
 
-Cover: stack (Astro 6, React 19 islands, Tailwind v4 design system, TanStack Query v5, Vitest, ESLint 10, Prettier 3, TypeScript, Node 24, pnpm), setup (`.env` from `.env.example`, Marvel keys), commands (`pnpm run dev|build|preview|test|test:ci|lint|typecheck`), folder structure (layouts, pages, lib/marvel, components/ui, hooks, styles), testing notes, and **Cloudflare Pages deploy**: build command `pnpm run build`, output directory `dist/`, set env vars `PUBLIC_MARVEL_API_KEY` + `MARVEL_PRIVATE_KEY` (secret) in the Pages project settings, Node 24.
+Cover: stack (Astro 7, React 19 islands, Tailwind v4 design system, TanStack Query v5, Vitest, ESLint 10, Prettier 3, TypeScript, Node 24, pnpm), setup (no env vars required — data comes from the built-in mock provider until the SuperHero API integration lands; `TOKEN` in `.env` is reserved for that), commands (`pnpm run dev|build|preview|test|test:ci|lint|typecheck`), folder structure (layouts, pages, lib/marvel, components/ui, hooks, styles), testing notes, and **Cloudflare Pages deploy**: build command `pnpm run build`, output directory `dist/`, **no env vars needed** (mock provider; add `TOKEN` only when the follow-up plan lands), Node 24.
 
 - [ ] **Step 2: Rewrite AGENTS.md**
 
-Update: stack section (Astro 6 pages in `src/pages/` — `.astro` files plus `[id].astro` dynamic routes, `src/pages/api/` for server endpoints; React 19 islands with `client:*` directives; Tailwind v4 CSS-first via `@theme` in `src/styles/global.css`, no config file), commands (`pnpm run test` = vitest watch, `test:ci` = one-shot vitest; `pnpm run lint` = eslint flat config; `pnpm run typecheck` = astro check; build requires `.env`), environment (`PUBLIC_MARVEL_API_KEY` + `MARVEL_PRIVATE_KEY`; signing in `src/lib/marvel/signing.ts` uses Web Crypto server-side), architecture conventions (feature components in `src/components/<Feature>/`; data access via `src/lib/marvel/marvel-client.ts` from Astro frontmatter/API routes only; islands fetch through `src/pages/api/*`; alias `@/*`), testing (colocated `*.test.{ts,tsx}`, vitest + testing-library, Astro container API for `.astro` components), git hooks (husky pre-commit → lint-staged: eslint --fix + prettier --write on staged files).
+Update: stack section (Astro 7 pages in `src/pages/` — `.astro` files plus `[id].astro` dynamic routes, `src/pages/api/` for server endpoints; React 19 islands with `client:*` directives; Tailwind v4 CSS-first via `@theme` in `src/styles/global.css`, no config file), commands (`pnpm run test` = vitest watch, `test:ci` = one-shot vitest; `pnpm run lint` = eslint flat config; `pnpm run typecheck` = astro check; build needs no `.env`), environment (`TOKEN` = SuperHero API key reserved for the upcoming integration; data currently served by the mock provider in `src/lib/marvel/`), architecture conventions (feature components in `src/components/<Feature>/`; data access via `src/lib/marvel/marvel-client.ts` from Astro frontmatter/API routes only — server-only, never from islands; islands fetch through `src/pages/api/*`; alias `@/*`), testing (colocated `*.test.{ts,tsx}`, vitest + testing-library, Astro container API for `.astro` components), git hooks (husky pre-commit → lint-staged: eslint --fix + prettier --write on staged files).
 
 - [ ] **Step 3: Full verification pass**
 
@@ -2106,6 +2279,6 @@ git commit -m "docs: update readme and agents for astro stack"
 
 ## Self-Review
 
-- **Spec coverage:** all spec sections map to tasks — static output (hybrid merged) + cloudflare adapter (T1), server-only signing + client (T2), API route (T3), design tokens + primitives (T4), home island + TanStack Query (T5), details prerender/fallback + 404 (T1/T6), shell + cleanup (T7), docs/deploy/CI (T8). Native crypto, env vars, Node 24, script names, test names all present.
+- **Spec coverage:** all spec sections map to tasks — static output (hybrid merged) + cloudflare adapter (T1), server-only service layer (T2, superseded by T3R mock provider), API route (T3), design tokens + primitives (T4), home island + TanStack Query (T5), details prerender/fallback + 404 (T1/T6), shell + cleanup (T7), docs/deploy/CI (T8). Node 24, script names, test names all present. Marvel API death + SuperHero API follow-up documented in the revision note (line 9).
 - **Placeholders:** only intentional ones — `design/` materials (Task 4 gate, placeholder tokens documented) and `.env` keys (Task 0, user action). Version `latest` pins are resolved at install time.
 - **Type consistency:** `fetchCharacters` returns `{ results: Character[]; total: number }` (raw count) everywhere; `total` page counts are computed at the boundary (`index.astro` frontmatter and the API route). `CharactersExplorer` props `{ initialData: Character[]; total: number }` (page count) — used identically in `index.astro` and its test.

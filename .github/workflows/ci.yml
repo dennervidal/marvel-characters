@@ -18,8 +18,4 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run typecheck
       - run: pnpm run test:ci
-      - name: build
-        env:
-          PUBLIC_MARVEL_API_KEY: ${{ secrets.PUBLIC_MARVEL_API_KEY }}
-          MARVEL_PRIVATE_KEY: ${{ secrets.MARVEL_PRIVATE_KEY }}
-        run: pnpm run build
+      - run: pnpm run build

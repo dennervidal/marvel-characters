@@ -1,0 +1,32 @@
+---
+import type { Comic } from '@/types'
+
+const { comics = [] } = Astro.props as { comics?: Comic[] }
+---
+
+<ul class='grid grid-cols-2 gap-4 md:grid-cols-3'>
+  {
+    comics.map(comic => {
+      const src = comic.thumbnail?.path
+        ? `${comic.thumbnail.path.replace(/^http:/, 'https:')}.${comic.thumbnail.extension}`
+        : undefined
+      return (
+        <li>
+          {src && (
+            <a href={src} target='_blank' rel='noreferrer'>
+              <img
+                src={src}
+                alt={comic.title ?? 'comic thumbnail'}
+                width={100}
+                height={150}
+                class='h-auto w-full object-cover'
+                loading='lazy'
+              />
+            </a>
+          )}
+          <p class='mt-1 text-sm'>{comic.title}</p>
+        </li>
+      )
+    })
+  }
+</ul>

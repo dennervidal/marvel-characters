@@ -914,7 +914,11 @@ Rewrite `src/lib/marvel/marvel-client.test.ts` (contract tests, no fetch mocking
 ```ts
 import { describe, expect, it } from 'vitest'
 import { MOCK_CHARACTERS } from './mock-data'
-import { fetchCharacterById, fetchCharacterComics, fetchCharacters } from './marvel-client'
+import {
+  fetchCharacterById,
+  fetchCharacterComics,
+  fetchCharacters
+} from './marvel-client'
 
 describe('marvel-client (mock provider)', () => {
   it('returns the first page and the raw total', async () => {
@@ -927,7 +931,9 @@ describe('marvel-client (mock provider)', () => {
   it('filters by name prefix, case-insensitive', async () => {
     const { results, total } = await fetchCharacters({ nameStartsWith: 'IRON' })
     expect(total).toBeGreaterThan(0)
-    expect(results.every(c => c.name?.toLowerCase().startsWith('iron'))).toBe(true)
+    expect(results.every(c => c.name?.toLowerCase().startsWith('iron'))).toBe(
+      true
+    )
   })
 
   it('paginates with a 0-based offset', async () => {
@@ -1029,7 +1035,7 @@ TOKEN=
 `.github/workflows/ci.yml` — replace the build step with:
 
 ```yaml
-      - run: pnpm run build
+- run: pnpm run build
 ```
 
 - [ ] **Step 4: Run tests to verify they pass**
@@ -1044,9 +1050,10 @@ Run: `pnpm run lint && pnpm run typecheck && pnpm run build` — build stays ser
 - [ ] **Step 6: Dev smoke test**
 
 Start `pnpm run dev` (timeout), then:
+
 - `curl 'http://localhost:4321/api/characters?limit=3'` → HTTP 200, JSON with 3 mock characters
 - `curl 'http://localhost:4321/api/characters?q=iron&page=1&limit=2'` → 200, filtered results
-Kill the server.
+  Kill the server.
 
 - [ ] **Step 7: Commit**
 

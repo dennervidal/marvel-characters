@@ -23,11 +23,10 @@ export const useCharactersExplorer = (
   initialData: Character[],
   total: number
 ) => {
-  const [query, setQuery] = useState<string>(
-    () =>
-      typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('query') ?? ''
-        : ''
+  const [query, setQuery] = useState<string>(() =>
+    typeof window !== 'undefined'
+      ? (new URLSearchParams(window.location.search).get('query') ?? '')
+      : ''
   )
   const [page, setPage] = useState<number>(1)
 

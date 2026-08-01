@@ -11,12 +11,21 @@ const CURATED: Array<[string, string]> = [
   ['Thanos', 'The Mad Titan on a quest to balance the universe.'],
   ['Spider-Man', 'Friendly neighborhood hero with spider-like abilities.'],
   ['Captain America', 'Super-soldier and the first Avenger.'],
-  ['Hulk', 'Scientist transformed by gamma radiation into the Incredible Hulk.'],
+  [
+    'Hulk',
+    'Scientist transformed by gamma radiation into the Incredible Hulk.'
+  ],
   ['Black Widow', 'Master spy and elite Avenger with a mysterious past.'],
-  ['Doctor Strange', 'Sorcerer Supreme defending reality from mystical threats.'],
+  [
+    'Doctor Strange',
+    'Sorcerer Supreme defending reality from mystical threats.'
+  ],
   ['Wolverine', 'Mutant with regenerative healing and adamantium claws.'],
-  ['Storm', "X-Men leader who commands the weather itself."],
-  ['Black Panther', 'King of Wakanda with enhanced senses and a vibranium suit.'],
+  ['Storm', 'X-Men leader who commands the weather itself.'],
+  [
+    'Black Panther',
+    'King of Wakanda with enhanced senses and a vibranium suit.'
+  ],
   ['Captain Marvel', "Cosmic-powered pilot turned Earth's mightiest hero."],
   ['Ant-Man', 'Size-shifting thief who became a hero.'],
   ['Wasp', 'Avenger who can shrink to insect size and fire energy blasts.'],

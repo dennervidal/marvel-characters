@@ -1,7 +1,18 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro'
+import { CharactersExplorer } from '@/components/CharactersExplorer'
+import { fetchCharacters } from '@/lib/marvel/marvel-client'
+import { PAGE_LIMIT } from '@/lib/marvel/constants'
+
+const { results, total } = await fetchCharacters({ page: 0, limit: PAGE_LIMIT })
 ---
 
 <MainLayout title='marvel characters'>
-  <main class='mx-auto max-w-5xl px-4 py-8'>Home</main>
+  <main class='mx-auto max-w-5xl px-4 py-8'>
+    <CharactersExplorer
+      client:load
+      initialData={results}
+      total={Math.ceil(total / PAGE_LIMIT)}
+    />
+  </main>
 </MainLayout>

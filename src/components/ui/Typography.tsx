@@ -12,6 +12,18 @@ const variantClasses: Record<string, string> = {
   caption: 'text-xs'
 }
 
+const variantTags: Record<string, ElementType> = {
+  h1: 'h1',
+  h2: 'h2',
+  h3: 'h3',
+  h4: 'h4',
+  h5: 'h5',
+  h6: 'h6',
+  subtitle: 'span',
+  body: 'p',
+  caption: 'span'
+}
+
 export const Typography = ({
   variant = 'body',
   component,
@@ -23,7 +35,7 @@ export const Typography = ({
   className?: string
   children: ReactNode
 }) => {
-  const Tag = component ?? variant
+  const Tag = component ?? variantTags[variant]
   return (
     <Tag className={`${variantClasses[variant]} ${className}`}>{children}</Tag>
   )

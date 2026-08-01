@@ -4,9 +4,9 @@
 
 **Goal:** Migrate the Next.js 12 / MUI v4 / styled-components app to Astro 6 + React 19 islands + Tailwind v4 custom design system, on the Cloudflare adapter with Vitest, ESLint 10 flat config, Prettier 3, TypeScript latest, Node 24 LTS.
 
-**Architecture:** Astro `hybrid` output (prerendered pages + on-demand fallback + API routes) with a single React island (`CharactersExplorer`, TanStack Query v5) on the home page; all Marvel API calls signed server-side with Web Crypto through `src/lib/marvel/`; details pages prerendered via `getStaticPaths` with on-demand fallback. Design tokens in `src/styles/global.css` (`@theme`), UI primitives in `src/components/ui/`.
+**Architecture:** Astro `static` output (Astro 5+ merged `hybrid` into `static`: pages/endpoints default to prerendered; per-route `export const prerender = false` opts into on-demand rendering with the Cloudflare adapter) with a single React island (`CharactersExplorer`, TanStack Query v5) on the home page; all Marvel API calls signed server-side with Web Crypto through `src/lib/marvel/`; details pages prerendered via `getStaticPaths` with on-demand fallback. Design tokens in `src/styles/global.css` (`@theme`), UI primitives in `src/components/ui/`.
 
-**Tech Stack:** astro ^6, @astrojs/cloudflare, @astrojs/react, react ^19, @tanstack/react-query ^5, tailwindcss ^4 + @tailwindcss/vite, vitest, eslint ^10 flat config, prettier ^3 + prettier-plugin-astro, typescript latest, husky 9 + lint-staged 16, pnpm, Node 24.
+**Tech Stack:** astro latest (resolves 7.x — `hybrid` merged into `static`), @astrojs/cloudflare (14.x), @astrojs/react, react ^19, @tanstack/react-query ^5, tailwindcss ^4 + @tailwindcss/vite, vitest (standalone `defineConfig` — `getViteConfig` breaks under the cloudflare adapter's Vite plugins), eslint ^10 flat config, prettier ^3 + prettier-plugin-astro, typescript ^6.0.3 pinned (7.x breaks `astro check` peer and typescript-eslint), husky 9 + lint-staged 16, pnpm, Node 24.
 
 ## Global Constraints
 
@@ -40,7 +40,7 @@
 
 **Interfaces:**
 
-- Produces: `src/styles/global.css` (with `@theme` placeholder tokens), `src/layouts/MainLayout.astro` (named export `MainLayout`, props `{ title?: string }`), `vitest.config.ts` (getViteConfig, jsdom, setup file), `eslint.config.mjs`, `.prettierrc.mjs`, empty-ish `src/pages/index.astro` + `src/pages/404.astro`, CI workflow.
+- Produces: `src/styles/global.css` (with `@theme` placeholder tokens), `src/layouts/MainLayout.astro` (named export `MainLayout`, props `{ title?: string }`), `vitest.config.ts` (standalone `defineConfig` + `@vitejs/plugin-react` + `@/` alias — NOT `getViteConfig`, which crashes under the cloudflare adapter), `eslint.config.mjs`, `.prettierrc.mjs`, empty-ish `src/pages/index.astro` + `src/pages/404.astro`, CI workflow.
 
 - [ ] **Step 1: Rewrite `package.json`**
 
@@ -92,7 +92,7 @@
     "lint-staged": "latest",
     "prettier": "^3",
     "prettier-plugin-astro": "latest",
-    "typescript": "latest",
+    "typescript": "^6.0.3",
     "typescript-eslint": "latest",
     "vitest": "latest"
   }
@@ -115,7 +115,7 @@ import cloudflare from '@astrojs/cloudflare'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  output: 'hybrid',
+  output: 'static',
   adapter: cloudflare(),
   integrations: [react()],
   vite: {
@@ -287,16 +287,21 @@ import MainLayout from '@/layouts/MainLayout.astro'
 
 - [ ] **Step 5: Vitest**
 
-`vitest.config.ts`:
+`vitest.config.ts` (this exact shape is REQUIRED — `getViteConfig` crashes the vitest worker with `ReferenceError: module is not defined` because it inherits the cloudflare adapter's Vite plugins):
 
 ```ts
-import { getViteConfig } from 'astro/config'
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
 
-export default getViteConfig({
+export default defineConfig({
+  plugins: [react()],
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}']
+    include: ['src/**/*.test.{ts,tsx}'],
+    resolve: {
+      alias: { '@': new URL('./src', import.meta.url).pathname }
+    }
   }
 })
 ```
@@ -306,8 +311,6 @@ export default getViteConfig({
 ```ts
 import '@testing-library/jest-dom/vitest'
 ```
-
-Troubleshooting note: if TSX/JSX transforms fail in tests, add `@vitejs/plugin-react` as a devDependency and a `plugins: [react()]` entry in the vitest config. `getViteConfig` inherits Astro's own Vite plugins, so this is usually unnecessary.
 
 - [ ] **Step 6: First test (verifies the vitest pipeline)**
 
@@ -2103,6 +2106,6 @@ git commit -m "docs: update readme and agents for astro stack"
 
 ## Self-Review
 
-- **Spec coverage:** all spec sections map to tasks — hybrid output + cloudflare adapter (T1), server-only signing + client (T2), API route (T3), design tokens + primitives (T4), home island + TanStack Query (T5), details prerender/fallback + 404 (T1/T6), shell + cleanup (T7), docs/deploy/CI (T8). Native crypto, env vars, Node 24, script names, test names all present.
+- **Spec coverage:** all spec sections map to tasks — static output (hybrid merged) + cloudflare adapter (T1), server-only signing + client (T2), API route (T3), design tokens + primitives (T4), home island + TanStack Query (T5), details prerender/fallback + 404 (T1/T6), shell + cleanup (T7), docs/deploy/CI (T8). Native crypto, env vars, Node 24, script names, test names all present.
 - **Placeholders:** only intentional ones — `design/` materials (Task 4 gate, placeholder tokens documented) and `.env` keys (Task 0, user action). Version `latest` pins are resolved at install time.
 - **Type consistency:** `fetchCharacters` returns `{ results: Character[]; total: number }` (raw count) everywhere; `total` page counts are computed at the boundary (`index.astro` frontmatter and the API route). `CharactersExplorer` props `{ initialData: Character[]; total: number }` (page count) — used identically in `index.astro` and its test.

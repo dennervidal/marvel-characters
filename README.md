@@ -9,21 +9,23 @@ You can access the deployed app [here](https://marvel-characters-theta.vercel.ap
 
 ## getting started
 
-First of all, you will need a Marvel developer account API key from [here](https://developer.marvel.com) 
+First of all, you will need a Marvel developer account API key from [here](https://developer.marvel.com)
 and then create a `.env` file or set the environment variable named `NEXT_PUBLIC_API_PUBLIC_KEY` (`.env.example` file is on this repo root).
 
 After that, make sure you have:
- - `pnpm` >= 7
- - `nodejs` >= 14
- 
+
+- `pnpm` >= 7
+- `nodejs` >= 14
+
 ## technologies
 
 The codebase contains the following:
- - `nextjs` to build the application, fully responsive, functional components and routing
- - `@material-ui` as primary visual components library
- - `styled-components` for customization
- - `prettier` for code formatting
- - and many other tweaks as absolute imports, commit hooks, service layers and ci build check
+
+- `nextjs` to build the application, fully responsive, functional components and routing
+- `@material-ui` as primary visual components library
+- `styled-components` for customization
+- `prettier` for code formatting
+- and many other tweaks as absolute imports, commit hooks, service layers and ci build check
 
 In the project directory, you can run:
 
@@ -43,10 +45,10 @@ Run unit tests for some components.
 
 ## folder structure
 
- - `src`
-   - `components`: reusable components
-   - `context`: application context
-   - `hooks`: custom hooks implementation
-   - `pages`: application pages
-   - `service`: api service layer
-   - `utils`: general js files
+- `src`
+  - `components`: reusable components
+  - `context`: application context
+  - `hooks`: custom hooks implementation
+  - `pages`: application pages
+  - `service`: api service layer
+  - `utils`: general js files

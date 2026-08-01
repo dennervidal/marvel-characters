@@ -1,4 +1,6 @@
 node_modules
-/*.js
-react-app-env.d.ts
-next-env.d.ts
+dist
+.astro
+pnpm-lock.yaml
+public
+design

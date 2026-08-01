@@ -1,0 +1,35 @@
+---
+import '@/styles/global.css'
+
+interface Props {
+  title?: string
+}
+const { title = 'marvel characters' } = Astro.props
+---
+
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>{title}</title>
+    <meta name='description' content='marvel characters database' />
+    <link rel='icon' type='image/png' sizes='32x32' href='/favicon.png' />
+    <link rel='manifest' href='/manifest.json' />
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap'
+      rel='stylesheet'
+    />
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=PT+Sans&family=PT+Sans+Caption&display=swap'
+      rel='stylesheet'
+    />
+  </head>
+  <body class='min-h-screen bg-background font-sans text-ink'>
+    <slot />
+  </body>
+</html>

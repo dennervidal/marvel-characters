@@ -1,9 +1,9 @@
 import type { APIContext } from 'astro'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { GET } from './characters'
-import { fetchCharacters } from '@/lib/marvel/marvel-client'
+import { fetchCharacters } from '@/lib/heroes/heroes-client'
 
-vi.mock('@/lib/marvel/marvel-client', () => ({
+vi.mock('@/lib/heroes/heroes-client', () => ({
   fetchCharacters: vi.fn()
 }))
 
@@ -21,7 +21,7 @@ describe('GET /api/characters', () => {
 
   it('returns results with total as page count', async () => {
     mockedFetchCharacters.mockResolvedValue({
-      results: [{ id: 1, name: 'Thor' }],
+      results: [{ id: '659', name: 'Thor' }],
       total: 57
     })
     const response = await GET(context('?q=th&page=2'))
@@ -30,17 +30,17 @@ describe('GET /api/characters', () => {
     expect(body.results[0].name).toBe('Thor')
     expect(body.total).toBe(6)
     expect(mockedFetchCharacters).toHaveBeenCalledWith({
-      nameStartsWith: 'th',
+      query: 'th',
       page: 1,
       limit: 10
     })
   })
 
-  it('treats missing q as null and clamps page and limit', async () => {
+  it('treats missing q as an empty query and clamps page and limit', async () => {
     mockedFetchCharacters.mockResolvedValue({ results: [], total: 0 })
     await GET(context('?page=0&limit=999'))
     expect(mockedFetchCharacters).toHaveBeenCalledWith({
-      nameStartsWith: null,
+      query: undefined,
       page: 0,
       limit: 100
     })

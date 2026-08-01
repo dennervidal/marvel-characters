@@ -1,12 +1,12 @@
 import { Avatar, Typography } from '@/components/ui'
-import type { Character } from '@/types'
+import type { Hero } from '@/types'
 
 export const CharactersTable = ({
   characters
 }: {
-  characters: Character[] | undefined
+  characters: Hero[] | undefined
 }) => {
-  const redirectToDetails = (id?: number) => {
+  const redirectToDetails = (id?: string) => {
     if (id) window.location.assign(`/details/${id}`)
   }
 
@@ -18,15 +18,15 @@ export const CharactersTable = ({
             Character
           </th>
           <th scope='col' className='hidden px-4 py-3 md:table-cell'>
-            Series
+            Publisher
           </th>
           <th scope='col' className='hidden px-4 py-3 md:table-cell'>
-            Events
+            Alignment
           </th>
         </tr>
       </thead>
       <tbody>
-        {(characters ?? []).map(({ name, thumbnail, events, series, id }) => (
+        {(characters ?? []).map(({ name, biography, image, id }) => (
           <tr
             key={`${name}-${id}`}
             onClick={() => redirectToDetails(id)}
@@ -34,11 +34,11 @@ export const CharactersTable = ({
           >
             <td className='px-4 py-3'>
               <div className='flex items-center gap-6'>
-                {thumbnail?.path && (
+                {image?.url && (
                   <Avatar
                     width={48}
                     height={48}
-                    src={`${thumbnail.path.replace(/^http:/, 'https:')}.${thumbnail.extension}`}
+                    src={image.url.replace(/^http:/, 'https:')}
                     alt={name ?? 'character thumbnail'}
                   />
                 )}
@@ -48,24 +48,18 @@ export const CharactersTable = ({
               </div>
             </td>
             <td className='hidden px-4 py-3 md:table-cell'>
-              {(series?.items?.slice(0, 3) ?? []).map(
-                ({ name: seriesName }) => (
-                  <Typography
-                    key={seriesName}
-                    variant='caption'
-                    className='block'
-                  >
-                    {seriesName}
-                  </Typography>
-                )
+              {biography?.publisher && biography.publisher !== '-' && (
+                <Typography variant='caption' className='block'>
+                  {biography.publisher}
+                </Typography>
               )}
             </td>
             <td className='hidden px-4 py-3 md:table-cell'>
-              {(events?.items?.slice(0, 3) ?? []).map(({ name: eventName }) => (
-                <Typography key={eventName} variant='caption' className='block'>
-                  {eventName}
+              {biography?.alignment && biography.alignment !== '-' && (
+                <Typography variant='caption' className='block'>
+                  {biography.alignment}
                 </Typography>
-              ))}
+              )}
             </td>
           </tr>
         ))}

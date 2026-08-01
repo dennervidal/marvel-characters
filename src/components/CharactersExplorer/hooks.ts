@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useCallback, useMemo, useState } from 'react'
-import type { Character } from '@/types'
+import { useCallback, useState } from 'react'
+import type { Hero } from '@/types'
 import { isEmpty } from '@/utils'
 
 const fetchCharactersPage = async ({
@@ -9,9 +9,9 @@ const fetchCharactersPage = async ({
 }: {
   q: string
   page: number
-}): Promise<{ results: Character[]; total: number }> => {
+}): Promise<{ results: Hero[]; total: number }> => {
   const url = new URL('/api/characters', window.location.origin)
-  if (!isEmpty(q)) url.searchParams.set('q', q)
+  url.searchParams.set('q', q)
   url.searchParams.set('page', String(page))
   const response = await fetch(url.toString())
   if (!response.ok)
@@ -19,10 +19,7 @@ const fetchCharactersPage = async ({
   return response.json()
 }
 
-export const useCharactersExplorer = (
-  initialData: Character[],
-  total: number
-) => {
+export const useCharactersExplorer = () => {
   const [query, setQuery] = useState<string>(() =>
     typeof window !== 'undefined'
       ? (new URLSearchParams(window.location.search).get('query') ?? '')
@@ -30,22 +27,11 @@ export const useCharactersExplorer = (
   )
   const [page, setPage] = useState<number>(1)
 
-  const placeholder = useMemo(
-    () =>
-      isEmpty(query) && page === 1
-        ? { results: initialData, total }
-        : undefined,
-    [query, page, initialData, total]
-  )
-
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ['characters', query, page],
     queryFn: () => fetchCharactersPage({ q: query, page }),
-    placeholderData: placeholder,
-    enabled: !placeholder
+    enabled: !isEmpty(query)
   })
-
-  const current = data ?? placeholder
 
   const gotoPage = useCallback((nextPage: number) => setPage(nextPage), [])
 
@@ -61,9 +47,11 @@ export const useCharactersExplorer = (
   return {
     query,
     page,
-    total: current?.total ?? total,
-    characters: current?.results ?? [],
+    total: data?.total ?? 0,
+    characters: data?.results ?? [],
     loading: isFetching,
+    isError,
+    refetch,
     gotoPage,
     updateQuery
   }

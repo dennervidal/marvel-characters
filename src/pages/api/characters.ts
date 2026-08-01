@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro'
-import { fetchCharacters } from '@/lib/marvel/marvel-client'
-import { PAGE_LIMIT } from '@/lib/marvel/constants'
+import { fetchCharacters } from '@/lib/heroes/heroes-client'
+import { PAGE_LIMIT } from '@/lib/heroes/constants'
 
 export const prerender = false
 
@@ -14,14 +14,17 @@ export async function GET({ request }: APIContext): Promise<Response> {
   )
   try {
     const { results, total } = await fetchCharacters({
-      nameStartsWith: query || null,
+      query: query || undefined,
       page: page - 1,
       limit
     })
     return new Response(
       JSON.stringify({ results, total: Math.ceil(total / limit) }),
       {
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=60, s-maxage=3600'
+        }
       }
     )
   } catch {

@@ -593,7 +593,9 @@ import { CharactersTable } from '@/components/CharactersTable'
 import { Navigation } from '@/components/Navigation'
 import { Skeleton, Typography } from '@/components/ui'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } }
+})
 
 export const CharactersExplorer = () => (
   <QueryClientProvider client={queryClient}>
@@ -970,10 +972,26 @@ const relatives =
     ? connections.relatives
     : undefined
 
-const detailRow = (label: string, value: string | undefined) =>
-  value
-    ? `<div class='border-b border-line py-2'><dt class='text-xs font-bold uppercase tracking-wider text-muted'>${label}</dt><dd class='mt-1 text-sm'>${value}</dd></div>`
-    : ''
+const biographyRows: Array<[string, string]> = [
+  ['Full name', fullName],
+  ['Alter egos', alterEgos],
+  ['Place of birth', birthPlace],
+  ['First appearance', firstAppearance],
+  ['Publisher', publisher],
+  ['Alignment', alignment]
+].filter((row): row is [string, string] => Boolean(row[1]))
+const appearanceRows: Array<[string, string]> = [
+  ['Gender', gender],
+  ['Race', race],
+  ['Height', height],
+  ['Weight', weight],
+  ['Eye color', eyeColor],
+  ['Hair color', hairColor]
+].filter((row): row is [string, string] => Boolean(row[1]))
+const workRows: Array<[string, string]> = [
+  ['Occupation', occupation],
+  ['Base', base]
+].filter((row): row is [string, string] => Boolean(row[1]))
 ---
 
 <MainLayout title={hero.name ?? 'Character'}>
@@ -1031,31 +1049,44 @@ const detailRow = (label: string, value: string | undefined) =>
           <PowerStats powerstats={hero.powerstats ?? {}} />
         </div>
         <h2 class='mt-8 text-xl font-bold uppercase'>Biography</h2>
-        <dl
-          class='mt-2'
-          set:html={detailRow('Full name', fullName) +
-            detailRow('Alter egos', alterEgos) +
-            detailRow('Place of birth', birthPlace) +
-            detailRow('First appearance', firstAppearance) +
-            detailRow('Publisher', publisher) +
-            detailRow('Alignment', alignment)}
-        />
+        <dl class='mt-2'>
+          {
+            biographyRows.map(([label, value]) => (
+              <div class='border-b border-line py-2'>
+                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+                  {label}
+                </dt>
+                <dd class='mt-1 text-sm'>{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
         <h2 class='mt-8 text-xl font-bold uppercase'>Appearance</h2>
-        <dl
-          class='mt-2'
-          set:html={detailRow('Gender', gender) +
-            detailRow('Race', race) +
-            detailRow('Height', height) +
-            detailRow('Weight', weight) +
-            detailRow('Eye color', eyeColor) +
-            detailRow('Hair color', hairColor)}
-        />
+        <dl class='mt-2'>
+          {
+            appearanceRows.map(([label, value]) => (
+              <div class='border-b border-line py-2'>
+                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+                  {label}
+                </dt>
+                <dd class='mt-1 text-sm'>{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
         <h2 class='mt-8 text-xl font-bold uppercase'>Work</h2>
-        <dl
-          class='mt-2'
-          set:html={detailRow('Occupation', occupation) +
-            detailRow('Base', base)}
-        />
+        <dl class='mt-2'>
+          {
+            workRows.map(([label, value]) => (
+              <div class='border-b border-line py-2'>
+                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+                  {label}
+                </dt>
+                <dd class='mt-1 text-sm'>{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
         <h2 class='mt-8 text-xl font-bold uppercase'>Connections</h2>
         {
           affiliation && (

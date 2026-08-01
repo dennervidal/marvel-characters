@@ -11,7 +11,7 @@
 - Tailwind CSS v4, CSS-first: design tokens via `@theme` in `src/styles/global.css`, **no tailwind config
   file**; the plugin is wired through `@tailwindcss/vite` in `astro.config.mjs`.
 - TypeScript 6 strict (`extends: astro/tsconfigs/strict`) with the `@/*` → `src/*` path alias.
-- Package manager is **pnpm** (do not add package-lock/yarn.lock). Node >= 22.12, Node 24 in CI.
+- Package manager is **pnpm** (do not add package-lock/yarn.lock). Node >= 22.12, Node 24 in CI. pnpm 11 is pinned via the `packageManager` field; CI's `pnpm/action-setup` uses the same version.
 
 ## Commands
 

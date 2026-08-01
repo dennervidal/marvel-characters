@@ -11,7 +11,7 @@ design system. The homepage lists and searches characters; details pages show ea
 - React 19 islands with `client:*` directives, TanStack Query v5 for client-side data fetching
 - Tailwind CSS v4 — CSS-first design tokens via `@theme` in `src/styles/global.css` (no config file)
 - Vitest + Testing Library, ESLint 10 (flat config), Prettier 3, TypeScript 6 (strict)
-- Node >= 22.12 (24 in CI), pnpm
+- Node >= 22.12 (24 in CI), pnpm 11 (pinned via the `packageManager` field; CI's `pnpm/action-setup` uses the same version)
 
 ## getting started
 

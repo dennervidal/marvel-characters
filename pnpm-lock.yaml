@@ -9,98 +9,98 @@ importers:
   .:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: latest
+        specifier: 14.1.7
         version: 14.1.7(@types/node@24.13.3)(astro@7.1.6(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0))(esbuild@0.28.1)(jiti@2.7.0)(wrangler@4.118.0)(yaml@2.9.0)
       '@astrojs/react':
-        specifier: latest
+        specifier: 6.0.2
         version: 6.0.2(@types/node@24.13.3)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(supports-color@10.2.2)(yaml@2.9.0)
       '@tailwindcss/vite':
-        specifier: ^4
+        specifier: 4.3.3
         version: 4.3.3(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
       '@tanstack/react-query':
-        specifier: ^5
+        specifier: 5.101.4
         version: 5.101.4(react@19.2.8)
       astro:
-        specifier: latest
+        specifier: 7.1.6
         version: 7.1.6(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
       react:
-        specifier: ^19
+        specifier: 19.2.8
         version: 19.2.8
       react-dom:
-        specifier: ^19
+        specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
       tailwindcss:
-        specifier: ^4
+        specifier: 4.3.3
         version: 4.3.3
     devDependencies:
       '@astrojs/check':
-        specifier: latest
+        specifier: 0.9.10
         version: 0.9.10(prettier-plugin-astro@0.14.1)(prettier@3.9.6)(typescript@6.0.3)
       '@testing-library/jest-dom':
-        specifier: latest
+        specifier: 7.0.0
         version: 7.0.0(@testing-library/dom@10.4.1)
       '@testing-library/react':
-        specifier: latest
+        specifier: 16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@testing-library/user-event':
-        specifier: latest
+        specifier: 14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@types/eslint-plugin-jsx-a11y':
-        specifier: ^6.10.1
+        specifier: 6.10.1
         version: 6.10.1(jiti@2.7.0)(supports-color@10.2.2)
       '@types/node':
-        specifier: ^24
+        specifier: 24.13.3
         version: 24.13.3
       '@types/react':
-        specifier: ^19
+        specifier: 19.2.18
         version: 19.2.18
       '@types/react-dom':
-        specifier: ^19
+        specifier: 19.2.4
         version: 19.2.4(@types/react@19.2.18)
       '@vitejs/plugin-react':
-        specifier: ^6.0.5
+        specifier: 6.0.5
         version: 6.0.5(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
       eslint:
-        specifier: ^10
+        specifier: 10.8.0
         version: 10.8.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-config-prettier:
-        specifier: latest
+        specifier: 10.1.8
         version: 10.1.8(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))
       eslint-plugin-astro:
-        specifier: ^3
+        specifier: 3.0.1
         version: 3.0.1(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint-plugin-jsx-a11y@6.10.2(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2)))(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
       eslint-plugin-jsx-a11y:
-        specifier: latest
+        specifier: 6.10.2
         version: 6.10.2(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))
       eslint-plugin-react-hooks:
-        specifier: latest
+        specifier: 7.1.1
         version: 7.1.1(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
       eslint-plugin-testing-library:
-        specifier: latest
+        specifier: 7.16.2
         version: 7.16.2(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       husky:
-        specifier: ^9
+        specifier: 9.1.7
         version: 9.1.7
       jsdom:
-        specifier: latest
+        specifier: 30.0.1
         version: 30.0.1
       lint-staged:
-        specifier: latest
+        specifier: 17.3.0
         version: 17.3.0
       prettier:
-        specifier: ^3
+        specifier: 3.9.6
         version: 3.9.6
       prettier-plugin-astro:
-        specifier: latest
+        specifier: 0.14.1
         version: 0.14.1
       typescript:
-        specifier: ^6.0.3
+        specifier: 6.0.3
         version: 6.0.3
       typescript-eslint:
-        specifier: latest
+        specifier: 8.65.0
         version: 8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       vitest:
-        specifier: latest
+        specifier: 4.1.10
         version: 4.1.10(@types/node@24.13.3)(jsdom@30.0.1)(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
 
 packages:

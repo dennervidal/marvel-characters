@@ -2296,6 +2296,68 @@ git commit -m "docs: update readme and agents for astro stack"
 
 ---
 
+### Task 9: Pin dependency versions + CI actions (user request 2026-08-01)
+
+**Why:** `package.json` uses `"latest"` for many deps (non-deterministic installs/builds) and the CI workflow uses `version: latest` + stale action majors. Pin everything to exact versions and upgrade the actions.
+
+**Facts (resolved 2026-08-01):** local pnpm is 11.17.0; latest action releases per GitHub API: `actions/checkout` v7.0.1, `actions/setup-node` v7.0.0, `pnpm/action-setup` v6.0.9. Resolved dependency versions from `pnpm list --depth 0`.
+
+**Files:**
+
+- Modify: `package.json` (exact pins + `packageManager`), `.github/workflows/ci.yml`, `pnpm-lock.yaml` (via install), `README.md` + `AGENTS.md` (pnpm 11 note)
+- Delete: nothing
+
+**Interfaces:**
+
+- `package.json` `packageManager` → `"pnpm@11.17.0"`; every dependency pinned to its exact resolved version (no `latest`, no carets). Values:
+
+```
+dependencies:
+  @astrojs/cloudflare 14.1.7   @astrojs/react 6.0.2      @tailwindcss/vite 4.3.3
+  @tanstack/react-query 5.101.4 astro 7.1.6               react 19.2.8   react-dom 19.2.8
+  tailwindcss 4.3.3
+devDependencies:
+  @astrojs/check 0.9.10   @testing-library/jest-dom 7.0.0  @testing-library/react 16.3.2
+  @testing-library/user-event 14.6.1  @types/eslint-plugin-jsx-a11y 6.10.1
+  @types/node 24.13.3     @types/react 19.2.18             @types/react-dom 19.2.4
+  @vitejs/plugin-react 6.0.5  eslint 10.8.0  eslint-config-prettier 10.1.8
+  eslint-plugin-astro 3.0.1  eslint-plugin-jsx-a11y 6.10.2  eslint-plugin-react-hooks 7.1.1
+  eslint-plugin-testing-library 7.16.2  husky 9.1.7  jsdom 30.0.1  lint-staged 17.3.0
+  prettier 3.9.6  prettier-plugin-astro 0.14.1  typescript 6.0.3  typescript-eslint 8.65.0
+  vitest 4.1.10
+```
+
+- `.github/workflows/ci.yml` → `actions/checkout@v7`, `pnpm/action-setup@v6` with `version: '11.17.0'` (must match `packageManager`), `actions/setup-node@v7` with `node-version: '24'` + `cache: pnpm`. No other changes.
+
+- [ ] **Step 1: Pin package.json**
+
+Rewrite `package.json` dependencies/devDependencies with the exact versions above and add `"packageManager": "pnpm@11.17.0"` after `"type"`. Keep `engines >=22.12.0`, all scripts, name/version/private unchanged.
+
+- [ ] **Step 2: Update CI workflow**
+
+Edit `.github/workflows/ci.yml` per the Interfaces block (three action version changes + pnpm `version: '11.17.0'`).
+
+- [ ] **Step 3: Regenerate the lockfile**
+
+Run: `pnpm install` — lockfile updates to exact pins; resolution should be identical (verify with `pnpm list --depth 0` — same versions as before).
+
+- [ ] **Step 4: Verify everything still green**
+
+Run: `pnpm run test:ci && pnpm run lint && pnpm run typecheck && pnpm run build` — all pass.
+
+- [ ] **Step 5: Note pnpm version in docs**
+
+`AGENTS.md`/`README.md`: mention pnpm 11 is pinned via the `packageManager` field (and `pnpm/action-setup` uses the same version). One line each, matching existing wording.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A
+git commit -m "chore: pin dependency versions and update ci actions"
+```
+
+---
+
 ## Self-Review
 
 - **Spec coverage:** all spec sections map to tasks — static output (hybrid merged) + cloudflare adapter (T1), server-only service layer (T2, superseded by T3R mock provider), API route (T3), design tokens + primitives (T4), home island + TanStack Query (T5), details prerender/fallback + 404 (T1/T6), shell + cleanup (T7), docs/deploy/CI (T8). Node 24, script names, test names all present. Marvel API death + SuperHero API follow-up documented in the revision note (line 9).

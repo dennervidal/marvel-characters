@@ -1,5 +1,6 @@
 ---
 import '@/styles/global.css'
+import Appbar from '@/components/Appbar/Appbar.astro'
 
 interface Props {
   title?: string
@@ -30,6 +31,9 @@ const { title = 'marvel characters' } = Astro.props
     />
   </head>
   <body class='min-h-screen bg-background font-sans text-ink'>
-    <slot />
+    <Appbar />
+    <main class='pt-20'>
+      <slot />
+    </main>
   </body>
 </html>

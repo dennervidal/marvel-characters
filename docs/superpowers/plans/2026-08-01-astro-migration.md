@@ -8,7 +8,7 @@
 
 > **REVISION (2026-08-01): the Marvel API is dead.** Verified: `gateway.marvel.com` returns `500 {"message":"Internal server error"}` for every endpoint, even unauthenticated. Tasks 2–3 were executed against Marvel before this was discovered. **Task 3R replaces the client with a deterministic mock provider** (same exported interface, no network) so Tasks 5–8 build and deploy fully. A follow-up plan (new session, new plan doc) will integrate the **SuperHero API** (`https://superheroapi.com/api/<TOKEN>/...`, token in path — `TOKEN` is already in `.env`; endpoints: `/search/name` (no pagination, no limit params), `/id` (+ `/powerstats`, `/biography`, `/appearance`, `/work`, `/connections`, `/image`); data includes powerstats/group-affiliation/full-name but **no comics data** — the COMIC APPEARANCES UI section must be redesigned; images are superherodb portraits; responses are `{response: "success", ...}`; note the API answers 302 on the bare URL and follows to the real one).
 
-**Tech Stack:** astro latest (resolves 7.x — `hybrid` merged into `static`), @astrojs/cloudflare (14.x), @astrojs/react, react ^19, @tanstack/react-query ^5, tailwindcss ^4 + @tailwindcss/vite, vitest (standalone `defineConfig` — `getViteConfig` breaks under the cloudflare adapter's Vite plugins), eslint ^10 flat config, prettier ^3 + prettier-plugin-astro, typescript ^6.0.3 pinned (7.x breaks `astro check` peer and typescript-eslint), husky 9 + lint-staged 16, pnpm, Node 24.
+**Tech Stack:** astro latest (resolves 7.x — `hybrid` merged into `static`), @astrojs/cloudflare (14.x), @astrojs/react, react ^19, @tanstack/react-query ^5, tailwindcss ^4 + @tailwindcss/vite, vitest (getViteConfig two-arg form with `configFile: false` — see Task 1 Step 5), eslint ^10 flat config, prettier ^3 + prettier-plugin-astro, typescript ^6.0.3 pinned (7.x breaks `astro check` peer and typescript-eslint), husky 9 + lint-staged 16, pnpm, Node 24.
 
 ## Global Constraints
 
@@ -42,7 +42,7 @@
 
 **Interfaces:**
 
-- Produces: `src/styles/global.css` (with `@theme` placeholder tokens), `src/layouts/MainLayout.astro` (named export `MainLayout`, props `{ title?: string }`), `vitest.config.ts` (standalone `defineConfig` + `@vitejs/plugin-react` + `@/` alias — NOT `getViteConfig`, which crashes under the cloudflare adapter), `eslint.config.mjs`, `.prettierrc.mjs`, empty-ish `src/pages/index.astro` + `src/pages/404.astro`, CI workflow.
+- Produces: `src/styles/global.css` (with `@theme` placeholder tokens), `src/layouts/MainLayout.astro` (named export `MainLayout`, props `{ title?: string }`), `vitest.config.ts` (getViteConfig two-arg form — `{ output: 'static', configFile: false }` — see Step 5 for the final shape), `eslint.config.mjs`, `.prettierrc.mjs`, empty-ish `src/pages/index.astro` + `src/pages/404.astro`, CI workflow.
 
 - [ ] **Step 1: Rewrite `package.json`**
 
@@ -289,24 +289,36 @@ import MainLayout from '@/layouts/MainLayout.astro'
 
 - [ ] **Step 5: Vitest**
 
-`vitest.config.ts` (this exact shape is REQUIRED — `getViteConfig` crashes the vitest worker with `ReferenceError: module is not defined` because it inherits the cloudflare adapter's Vite plugins):
+`vitest.config.ts` (FINAL working shape — resolved during Task 6; must transform `.astro` files AND avoid the cloudflare adapter plugins in the worker):
 
 ```ts
-import { defineConfig } from 'vitest/config'
+/// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react'
+import { getViteConfig } from 'astro/config'
+import { fileURLToPath } from 'node:url'
 
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
+export default getViteConfig(
+  {
+    plugins: [react()],
     resolve: {
-      alias: { '@': new URL('./src', import.meta.url).pathname }
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
+    },
+    test: {
+      environment: 'jsdom',
+      setupFiles: ['./src/test/setup.ts'],
+      include: ['src/**/*.test.{ts,tsx}']
     }
+  },
+  {
+    output: 'static',
+    configFile: false
   }
-})
+)
 ```
+
+History: Task 1 first tried standalone `defineConfig` (plain `getViteConfig` crashed with `ReferenceError: module is not defined` because it inherited the cloudflare adapter's plugins; standalone `defineConfig` worked for plain TS/TSX). Task 6 needed `.astro` file transforms for the ComicPreview container test, which requires `getViteConfig` — the two-arg form with `{ output: 'static', configFile: false }` is the shape that does both. Do not revert to either of the earlier forms.
 
 `src/test/setup.ts`:
 

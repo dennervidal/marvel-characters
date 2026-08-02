@@ -1,50 +1,110 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro'
-import ComicPreview from '@/components/ComicPreview/ComicPreview.astro'
-import {
-  fetchCharacterById,
-  fetchCharacterComics,
-  fetchCharacters
-} from '@/lib/marvel/marvel-client'
-import { PAGE_LIMIT } from '@/lib/marvel/constants'
+import PowerStats from '@/components/PowerStats/PowerStats.astro'
+import { fetchCharacterById } from '@/lib/heroes/heroes-client'
 
-export const prerender = true
-
-export async function getStaticPaths() {
-  const STATIC_CHARACTERS = 300
-  const paths: { params: { id: string } }[] = []
-  for (let offset = 0; offset < STATIC_CHARACTERS; offset += PAGE_LIMIT) {
-    const { results } = await fetchCharacters({
-      page: offset / PAGE_LIMIT,
-      limit: PAGE_LIMIT
-    })
-    for (const character of results) {
-      if (character.id) paths.push({ params: { id: String(character.id) } })
-    }
-  }
-  return paths
-}
+export const prerender = false
 
 const { id } = Astro.params
-const character = await fetchCharacterById(id)
-if (!character) return Astro.rewrite('/404')
+if (!id) return Astro.rewrite('/404')
+const hero = await fetchCharacterById(id)
+if (!hero) return Astro.rewrite('/404')
 
-const comics = await fetchCharacterComics(id)
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, max-age=300, s-maxage=86400, stale-while-revalidate=3600'
+)
 
-const thumbnailSrc = character.thumbnail?.path
-  ? `${character.thumbnail.path.replace(/^http:/, 'https:')}.${character.thumbnail.extension}`
-  : undefined
+const imageUrl = hero.image?.url?.replace(/^http:/, 'https:')
+const { biography = {}, appearance = {}, work = {}, connections = {} } = hero
+const fullName =
+  biography['full-name'] && biography['full-name'] !== '-'
+    ? biography['full-name']
+    : undefined
+const aliases = (biography.aliases ?? []).filter(a => a && a !== '-')
+const publisher =
+  biography.publisher && biography.publisher !== '-'
+    ? biography.publisher
+    : undefined
+const alignment =
+  biography.alignment && biography.alignment !== '-'
+    ? biography.alignment
+    : undefined
+const birthPlace =
+  biography['place-of-birth'] && biography['place-of-birth'] !== '-'
+    ? biography['place-of-birth']
+    : undefined
+const firstAppearance =
+  biography['first-appearance'] && biography['first-appearance'] !== '-'
+    ? biography['first-appearance']
+    : undefined
+const alterEgos =
+  biography['alter-egos'] && biography['alter-egos'] !== '-'
+    ? biography['alter-egos']
+    : undefined
+const gender =
+  appearance.gender && appearance.gender !== '-' ? appearance.gender : undefined
+const race =
+  appearance.race && appearance.race !== '-' ? appearance.race : undefined
+const height =
+  appearance.height?.[1] && appearance.height[1] !== '-'
+    ? appearance.height[1]
+    : undefined
+const weight =
+  appearance.weight?.[1] && appearance.weight[1] !== '-'
+    ? appearance.weight[1]
+    : undefined
+const eyeColor =
+  appearance['eye-color'] && appearance['eye-color'] !== '-'
+    ? appearance['eye-color']
+    : undefined
+const hairColor =
+  appearance['hair-color'] && appearance['hair-color'] !== '-'
+    ? appearance['hair-color']
+    : undefined
+const occupation =
+  work.occupation && work.occupation !== '-' ? work.occupation : undefined
+const base = work.base && work.base !== '-' ? work.base : undefined
+const affiliation =
+  connections['group-affiliation'] && connections['group-affiliation'] !== '-'
+    ? connections['group-affiliation']
+    : undefined
+const relatives =
+  connections.relatives && connections.relatives !== '-'
+    ? connections.relatives
+    : undefined
+
+const biographyRows: Array<[string, string]> = [
+  ['Full name', fullName],
+  ['Alter egos', alterEgos],
+  ['Place of birth', birthPlace],
+  ['First appearance', firstAppearance],
+  ['Publisher', publisher],
+  ['Alignment', alignment]
+].filter((row): row is [string, string] => Boolean(row[1]))
+const appearanceRows: Array<[string, string]> = [
+  ['Gender', gender],
+  ['Race', race],
+  ['Height', height],
+  ['Weight', weight],
+  ['Eye color', eyeColor],
+  ['Hair color', hairColor]
+].filter((row): row is [string, string] => Boolean(row[1]))
+const workRows: Array<[string, string]> = [
+  ['Occupation', occupation],
+  ['Base', base]
+].filter((row): row is [string, string] => Boolean(row[1]))
 ---
 
-<MainLayout title={character.name ?? 'Character'}>
+<MainLayout title={hero.name ?? 'Character'}>
   <div class='mx-auto max-w-5xl px-4 py-8'>
     <div class='grid gap-8 md:grid-cols-12'>
       <section class='md:col-span-4'>
         {
-          thumbnailSrc && (
+          imageUrl && (
             <img
-              src={thumbnailSrc}
-              alt={character.name ?? 'character thumbnail'}
+              src={imageUrl}
+              alt={hero.name ?? 'character thumbnail'}
               width={490}
               height={490}
               class='h-auto w-full border-[3px] border-ink'
@@ -56,19 +116,94 @@ const thumbnailSrc = character.thumbnail?.path
         <h1
           class='border-[3px] border-ink bg-yellow px-4 py-2 text-3xl font-bold uppercase text-ink'
         >
-          {character.name}
+          {hero.name}
         </h1>
         {
-          character.description && (
-            <p class='mt-4 text-[15px] leading-relaxed'>
-              {character.description}
+          fullName && (
+            <p class='mt-2 text-sm font-bold uppercase tracking-wider text-muted'>
+              {fullName}
             </p>
           )
         }
-        <h2 class='mt-8 text-xl font-semibold'>Comics appearance</h2>
+        {
+          aliases.length > 0 && (
+            <p class='mt-1 text-sm'>Also known as: {aliases.join(', ')}</p>
+          )
+        }
+        {
+          (publisher || alignment) && (
+            <div class='mt-4 flex flex-wrap gap-2'>
+              {publisher && (
+                <span class='border-2 border-ink bg-surface px-2 py-1 text-xs font-bold uppercase'>
+                  {publisher}
+                </span>
+              )}
+              {alignment && (
+                <span class='border-2 border-ink bg-surface px-2 py-1 text-xs font-bold uppercase'>
+                  {alignment}
+                </span>
+              )}
+            </div>
+          )
+        }
+        <h2 class='mt-8 text-xl font-bold uppercase'>Powerstats</h2>
         <div class='mt-4'>
-          <ComicPreview comics={comics} />
+          <PowerStats powerstats={hero.powerstats ?? {}} />
         </div>
+        <h2 class='mt-8 text-xl font-bold uppercase'>Biography</h2>
+        <dl class='mt-2'>
+          {
+            biographyRows.map(([label, value]) => (
+              <div class='border-b border-line py-2'>
+                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+                  {label}
+                </dt>
+                <dd class='mt-1 text-sm'>{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <h2 class='mt-8 text-xl font-bold uppercase'>Appearance</h2>
+        <dl class='mt-2'>
+          {
+            appearanceRows.map(([label, value]) => (
+              <div class='border-b border-line py-2'>
+                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+                  {label}
+                </dt>
+                <dd class='mt-1 text-sm'>{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <h2 class='mt-8 text-xl font-bold uppercase'>Work</h2>
+        <dl class='mt-2'>
+          {
+            workRows.map(([label, value]) => (
+              <div class='border-b border-line py-2'>
+                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+                  {label}
+                </dt>
+                <dd class='mt-1 text-sm'>{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <h2 class='mt-8 text-xl font-bold uppercase'>Connections</h2>
+        {
+          affiliation && (
+            <p class='mt-2 text-[15px] leading-relaxed'>
+              <span class='font-bold'>Group affiliation:</span> {affiliation}
+            </p>
+          )
+        }
+        {
+          relatives && (
+            <p class='mt-2 text-[15px] leading-relaxed'>
+              <span class='font-bold'>Relatives:</span> {relatives}
+            </p>
+          )
+        }
       </section>
     </div>
   </div>

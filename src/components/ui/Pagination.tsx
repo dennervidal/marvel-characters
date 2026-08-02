@@ -17,7 +17,9 @@ const pageNumbers = (
 }
 
 const buttonClass =
-  'brutal-btn h-10 min-w-10 border-[3px] border-ink bg-surface px-2 text-sm font-bold text-ink disabled:pointer-events-none disabled:opacity-40'
+  'brutal-btn h-10 w-10 border-[3px] border-border font-mono text-sm font-bold shadow-hard-3 disabled:pointer-events-none disabled:opacity-40'
+const activeButtonClass = `${buttonClass} bg-foreground text-secondary shadow-hard-red`
+const idleButtonClass = `${buttonClass} bg-white`
 
 export const Pagination = ({
   count,
@@ -52,7 +54,7 @@ export const Pagination = ({
         <button
           type='button'
           aria-label='go to first page'
-          className={buttonClass}
+          className={idleButtonClass}
           onClick={() => onChange(1)}
         >
           «
@@ -62,7 +64,7 @@ export const Pagination = ({
         <button
           type='button'
           aria-label='go to previous page'
-          className={buttonClass}
+          className={idleButtonClass}
           onClick={() => onChange(page - 1)}
         >
           ‹
@@ -70,7 +72,7 @@ export const Pagination = ({
       )}
       {pageNumbers(count, page, siblingCount).map((number, index) =>
         number === 'ellipsis' ? (
-          <span key={`ellipsis-${index}`} className='px-1 text-ink'>
+          <span key={`ellipsis-${index}`} className='px-1 text-foreground'>
             …
           </span>
         ) : (
@@ -79,7 +81,7 @@ export const Pagination = ({
             type='button'
             aria-label={`go to page ${number}`}
             aria-current={number === page ? 'page' : undefined}
-            className={`${buttonClass} ${number === page ? 'bg-ink text-surface' : ''}`}
+            className={number === page ? activeButtonClass : idleButtonClass}
             onClick={() => onChange(number)}
           >
             {number}
@@ -90,7 +92,7 @@ export const Pagination = ({
         <button
           type='button'
           aria-label='go to next page'
-          className={buttonClass}
+          className={idleButtonClass}
           onClick={() => onChange(page + 1)}
         >
           ›
@@ -100,7 +102,7 @@ export const Pagination = ({
         <button
           type='button'
           aria-label='go to last page'
-          className={buttonClass}
+          className={idleButtonClass}
           onClick={() => onChange(count)}
         >
           »

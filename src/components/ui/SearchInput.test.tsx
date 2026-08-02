@@ -13,13 +13,12 @@ describe('SearchInput', () => {
     expect(onSearch).toHaveBeenCalledWith('thor')
   })
 
-  it('calls onSearch when the search button is clicked', () => {
+  it('shows a clear button after typing and clears on click', () => {
     const onSearch = vi.fn()
     render(<SearchInput onSearch={onSearch} placeholder='Search' />)
-    fireEvent.change(screen.getByPlaceholderText('Search'), {
-      target: { value: 'hulk' }
-    })
-    fireEvent.click(screen.getByRole('button', { name: /search/i }))
-    expect(onSearch).toHaveBeenCalledWith('hulk')
+    const input = screen.getByPlaceholderText('Search')
+    fireEvent.change(input, { target: { value: 'hulk' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Clear search' }))
+    expect(onSearch).toHaveBeenCalledWith('')
   })
 })

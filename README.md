@@ -2,8 +2,10 @@
 
 [![CI](https://github.com/dennervidal/marvel-characters/actions/workflows/ci.yml/badge.svg)](https://github.com/dennervidal/marvel-characters/actions/workflows/ci.yml)
 
-Marvel characters database built with Astro 7 and React 19 islands, styled with a Tailwind v4 neo-brutalist
-design system. The homepage lists and searches characters; details pages show each character's info and comics.
+Character database built with Astro 7 and React 19 islands, styled with a Tailwind v4 neo-brutalist
+design system. The homepage lists and searches characters; details pages show each character's full profile
+and powerstats. Data comes from the SuperHero API (`superheroapi.com`) — all universes (Marvel, DC, and more),
+no comics data; images are superherodb portraits.
 
 ## stack
 
@@ -15,11 +17,13 @@ design system. The homepage lists and searches characters; details pages show ea
 
 ## getting started
 
-No API keys or `.env` required: data comes from the built-in mock provider in `src/lib/marvel/` until the
-SuperHero API integration lands. `TOKEN` in `.env` (see `.env.example`) is reserved for that integration.
+Copy `.env.example` to `.env` and set `TOKEN` — a 32-character SuperHero API key from
+<https://superheroapi.com/>. It is required at runtime (dev server and the Cloudflare Pages environment
+variable), **not** at build: `pnpm run build` works without it.
 
 ```bash
 pnpm install
+cp .env.example .env  # set TOKEN
 pnpm run dev
 ```
 
@@ -38,11 +42,11 @@ pnpm run dev
 
 ## folder structure
 
-- `src/components` — feature components (`CharactersExplorer`, `CharactersTable`, `ComicPreview`, shell pieces)
-  and `ui` primitives (`Avatar`, `Pagination`, `SearchInput`, `Spinner`, `Typography`, ...)
+- `src/components` — feature components (`CharactersExplorer`, `CharactersTable`, `PowerStats`, shell pieces)
+  and `ui` primitives (`Avatar`, `Pagination`, `SearchInput`, `Skeleton`, `Typography`, ...)
 - `src/layouts` — `MainLayout.astro` app shell (fonts, favicon, manifest, appbar)
-- `src/lib/marvel` — server-only client (`marvel-client.ts`) backed by the mock data provider (`mock-data.ts`)
-- `src/pages` — `index.astro`, `404.astro`, dynamic `details/[id].astro`, and `api/characters.ts` server endpoint
+- `src/lib/heroes` — server-only client (`heroes-client.ts`) for the SuperHero API
+- `src/pages` — `index.astro`, `404.astro`, on-demand `details/[id].astro`, and `api/characters.ts` server endpoint
 - `src/styles` — `global.css` with Tailwind v4 theme tokens and brutalist component classes
 - `src/types`, `src/utils`, `src/test` (vitest setup)
 - `public` — `favicon.png`, `manifest.json`, `robots.txt`, `assets`
@@ -57,5 +61,5 @@ Tests are colocated as `*.test.tsx` next to the code. Component tests render ins
 - Build command: `pnpm run build`
 - Output directory: `dist/`
 - Runtime: Node 24
-- No environment variables needed — the mock provider serves data until the SuperHero API integration lands;
-  add `TOKEN` (the SuperHero API key) only then.
+- Set `TOKEN` (the SuperHero API key) as a Cloudflare Pages environment variable. Details pages render
+  on-demand and are edge-cached by Cloudflare; `/api/characters` also needs `TOKEN` at runtime.

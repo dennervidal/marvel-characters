@@ -1,7 +1,5 @@
 export { Typography } from './Typography'
 export { Avatar } from './Avatar'
-export { Spinner } from './Spinner'
-export { LoadingPlaceholder } from './LoadingPlaceholder'
+export { Skeleton } from './Skeleton'
 export { Pagination } from './Pagination'
 export { SearchInput } from './SearchInput'
-export { Skeleton } from './Skeleton'

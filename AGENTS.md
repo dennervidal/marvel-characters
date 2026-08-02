@@ -4,8 +4,8 @@
 
 - Astro 7 with static output on the Cloudflare adapter (`output: 'static'` in `astro.config.mjs`). Pages live in
   `src/pages/` as `.astro` files — `index.astro`, `404.astro`, dynamic routes like `details/[id].astro`
-  (prerendered via `getStaticPaths`, missing ids `Astro.rewrite` to `/404`), and server endpoints in
-  `src/pages/api/` (`characters.ts`, `prerender = false`).
+  (on-demand, `prerender = false`, with a `Cache-Control` header for Cloudflare edge caching; missing ids
+  `Astro.rewrite` to `/404`), and server endpoints in `src/pages/api/` (`characters.ts`, `prerender = false`).
 - React 19 islands with `client:*` directives (home explorer uses `client:load`); TanStack Query v5 for
   client-side fetching.
 - Tailwind CSS v4, CSS-first: design tokens via `@theme` in `src/styles/global.css`, **no tailwind config
@@ -21,27 +21,27 @@
   `pnpm run test:ci src/components/CharactersExplorer`
 - `pnpm run lint` — eslint (flat config, `eslint.config.mjs`)
 - `pnpm run typecheck` — `astro check`
-- `pnpm run build` — `astro build`; **needs no `.env`** (mock data provider, see below)
+- `pnpm run build` — `astro build`; **needs no `.env`** (see Environment)
 - `pnpm run prettify` — prettier write (repo style: no semicolons, single quotes, trailing comma none)
 
 ## Environment
 
-`.env.example` (and the local `.env`) contains a single reserved key:
+`.env.example` (and the local `.env`) contains a single key:
 
-- `TOKEN` — SuperHero API key for the upcoming integration; **unused today**.
-
-Data is served by the mock provider in `src/lib/marvel/` (`mock-data.ts` + `marvel-client.ts`). No environment
-variable is read at build or runtime.
+- `TOKEN` — SuperHero API key (32-char, from superheroapi.com). **Required at runtime**, server-only: read via
+  `import.meta.env.TOKEN` in `src/lib/heroes/heroes-client.ts`, never exposed to client bundles. The build
+  needs no env, but runtime on-demand pages (`/details/[id]`) and `/api/characters` need `TOKEN` set in the
+  Cloudflare Pages environment.
 
 ## Architecture conventions
 
 - Feature components live in `src/components/<Feature>/` with this layout: `Feature.tsx`, `hooks.ts`, `index.ts`,
   and a colocated `*.test.tsx`. Mirror this for new components. Shared UI primitives live in
-  `src/components/ui/`.
-- Data access goes through `src/lib/marvel/marvel-client.ts` (`fetchCharacters`, `fetchCharacterById`,
-  `fetchCharacterComics`) — **server-only**: called from Astro frontmatter and API routes, never from islands.
+  `src/components/ui/`. `PowerStats.astro` lives in `src/components/PowerStats/`.
+- Data access goes through `src/lib/heroes/heroes-client.ts` (`fetchCharacters({ query, page, limit })`,
+  `fetchCharacterById`) — **server-only**: called from Astro frontmatter and API routes, never from islands.
 - Islands fetch through `src/pages/api/*` (e.g. `GET /api/characters?q=...&page=...`).
-- Imports use the `@/*` alias rooted at `src` — e.g. `import { fetchCharacters } from '@/lib/marvel/marvel-client'`.
+- Imports use the `@/*` alias rooted at `src` — e.g. `import { fetchCharacters } from '@/lib/heroes/heroes-client'`.
   Do not use relative imports across top-level dirs.
 - The app shell is `src/layouts/MainLayout.astro`.
 

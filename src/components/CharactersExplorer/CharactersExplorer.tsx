@@ -1,10 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { isEmpty } from '@/utils'
-import { useCharactersExplorer } from './hooks'
-import { SearchHeader } from '@/components/SearchHeader'
-import { CharactersTable } from '@/components/CharactersTable'
+import { AnimatePresence, motion } from 'motion/react'
+import { Skeleton } from '@/components/ui'
+import { EmptyState } from '@/components/EmptyState'
+import { HeroCard } from '@/components/HeroCard'
 import { Navigation } from '@/components/Navigation'
-import { Skeleton, Typography } from '@/components/ui'
+import { SearchHeader } from '@/components/SearchHeader'
+import { useCharactersExplorer } from './hooks'
+import { isEmpty } from '@/utils'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false } }
@@ -16,10 +18,14 @@ export const CharactersExplorer = () => (
   </QueryClientProvider>
 )
 
-const SkeletonTable = () => (
-  <div role='status' aria-label='loading' className='flex flex-col gap-3'>
-    {Array.from({ length: 6 }, (_, index) => (
-      <Skeleton key={index} className='h-14' />
+const SkeletonGrid = () => (
+  <div
+    role='status'
+    aria-label='loading'
+    className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+  >
+    {Array.from({ length: 8 }, (_, index) => (
+      <Skeleton key={index} className='h-72' />
     ))}
   </div>
 )
@@ -27,48 +33,72 @@ const SkeletonTable = () => (
 const Explorer = () => {
   const {
     query,
+    filter,
     page,
     total,
     characters,
+    counts,
     loading,
     isError,
     refetch,
     gotoPage,
-    updateQuery
+    updateQuery,
+    setFilter
   } = useCharactersExplorer()
+
+  const clearAll = () => {
+    updateQuery('')
+    setFilter('all')
+  }
 
   let content
   if (isEmpty(query)) {
     content = (
-      <Typography variant='body' className='py-16 text-center text-muted'>
-        Search for a character to get started
-      </Typography>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <EmptyState query='' onClear={clearAll} onSuggestion={updateQuery} />
+      </motion.div>
     )
   } else if (loading) {
-    content = <SkeletonTable />
+    content = <SkeletonGrid />
   } else if (isError) {
     content = (
-      <div className='flex flex-col items-center gap-4 py-16'>
-        <Typography variant='body'>Something went wrong</Typography>
+      <div className='flex flex-col items-center gap-4 py-16 text-center'>
+        <p className='font-display text-2xl uppercase'>SOMETHING WENT WRONG</p>
         <button
           type='button'
           onClick={() => refetch()}
-          className='brutal-btn border-[3px] border-ink bg-yellow px-4 py-2 text-sm font-bold uppercase text-ink'
+          className='border-4 border-border bg-primary px-6 py-2.5 font-mono text-[0.65rem] uppercase tracking-wide text-white shadow-hard hover:bg-[#c0392b]'
         >
-          Retry
+          RETRY
         </button>
       </div>
     )
   } else if (characters.length === 0) {
     content = (
-      <Typography variant='body' className='py-16 text-center text-muted'>
-        No characters found for &quot;{query}&quot;
-      </Typography>
+      <EmptyState query={query} onClear={clearAll} onSuggestion={updateQuery} />
     )
   } else {
     content = (
       <>
-        <CharactersTable characters={characters} />
+        <motion.div
+          layout
+          className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+        >
+          <AnimatePresence mode='popLayout'>
+            {characters.map((hero, index) => (
+              <motion.div
+                key={hero.id}
+                layout
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94 }}
+                transition={{ delay: Math.min(index * 0.035, 0.28) }}
+              >
+                <HeroCard hero={hero} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
         {total > 1 && (
           <Navigation page={page} total={total} onChange={gotoPage} />
         )}
@@ -78,7 +108,13 @@ const Explorer = () => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <SearchHeader query={query} updateQuery={updateQuery} />
+      <SearchHeader
+        query={query}
+        updateQuery={updateQuery}
+        filter={filter}
+        counts={counts}
+        onFilterChange={setFilter}
+      />
       {content}
     </div>
   )

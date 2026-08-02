@@ -6,14 +6,20 @@ const mockFetch = vi.fn()
 
 const charactersResponse = {
   ok: true,
-  json: async () => ({ results: [{ id: '2', name: 'Hulk' }], total: 1 })
+  json: async () => ({
+    results: [{ id: '2', name: 'Hulk' }],
+    total: 1,
+    counts: { heroes: 1, villains: 0, marvel: 0, dc: 0, others: 0 }
+  })
 }
 
 const search = (value: string) => {
-  fireEvent.change(screen.getByPlaceholderText('Search'), {
+  fireEvent.change(screen.getByPlaceholderText('SEARCH CHARACTERS...'), {
     target: { value }
   })
-  fireEvent.keyDown(screen.getByPlaceholderText('Search'), { key: 'Enter' })
+  fireEvent.keyDown(screen.getByPlaceholderText('SEARCH CHARACTERS...'), {
+    key: 'Enter'
+  })
 }
 
 describe('CharactersExplorer', () => {
@@ -29,7 +35,7 @@ describe('CharactersExplorer', () => {
 
   it('renders the empty state and does not fetch without a query', () => {
     render(<CharactersExplorer />)
-    expect(screen.getByText(/search for a character/i)).toBeInTheDocument()
+    expect(screen.getByText(/search the hero base/i)).toBeInTheDocument()
     expect(mockFetch).not.toHaveBeenCalled()
   })
 
@@ -37,8 +43,12 @@ describe('CharactersExplorer', () => {
     render(<CharactersExplorer />)
     search('hulk')
     await screen.findByText('Hulk')
-    expect(mockFetch.mock.calls[0][0]).toContain('/api/characters')
+    const firstCallUrl = new URL(mockFetch.mock.calls[0][0])
+    expect(firstCallUrl.pathname).toContain('/api/characters')
+    expect(firstCallUrl.searchParams.get('q')).toBe('hulk')
+    expect(firstCallUrl.searchParams.get('page')).toBe('1')
     expect(window.location.search).toContain('query=hulk')
+    expect(screen.getAllByRole('link').length).toBeGreaterThan(0)
   })
 
   it('shows a skeleton while loading and replaces it with results', async () => {
@@ -59,11 +69,37 @@ describe('CharactersExplorer', () => {
   it('shows a no-results message when the search is empty', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ results: [], total: 0 })
+      json: async () => ({
+        results: [],
+        total: 0,
+        counts: { heroes: 0, villains: 0, marvel: 0, dc: 0, others: 0 }
+      })
     })
     render(<CharactersExplorer />)
     search('zzz')
-    expect(await screen.findByText(/no characters found/i)).toBeInTheDocument()
+    expect(await screen.findByText(/no heroes found/i)).toBeInTheDocument()
+  })
+
+  it('applies the villains filter, updates the url and marks the chip active', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        results: [{ id: '2', name: 'Hulk' }],
+        total: 1,
+        counts: { heroes: 4, villains: 3, marvel: 3, dc: 3, others: 3 }
+      })
+    })
+    render(<CharactersExplorer />)
+    search('hulk')
+    await screen.findByText('Hulk')
+    fireEvent.click(screen.getByRole('button', { name: /villains/i }))
+    const villainsCall = mockFetch.mock.calls.at(-1)?.[0] as string
+    expect(new URL(villainsCall).searchParams.get('filter')).toBe('villains')
+    expect(window.location.search).toContain('filter=villains')
+    expect(screen.getByRole('button', { name: /villains/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    )
   })
 
   it('shows an error state with retry when the fetch fails', async () => {

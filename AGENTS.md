@@ -28,9 +28,9 @@
 
 `.env.example` (and the local `.env`) contains a single key:
 
-- `TOKEN` — SuperHero API key (32-char, from superheroapi.com). **Required at runtime**, server-only: read via
-  `import.meta.env.TOKEN` in `src/lib/heroes/heroes-client.ts`, never exposed to client bundles. The build
-  needs no env, but runtime on-demand pages (`/details/[id]`) and `/api/characters` need `TOKEN` set in the
+- `API_TOKEN` — SuperHero API key (32-char, from superheroapi.com). **Required at runtime**, server-only: read via
+  `import.meta.env.API_TOKEN` in `src/lib/heroes/heroes-client.ts`, never exposed to client bundles. The build
+  needs no env, but runtime on-demand pages (`/details/[id]`) and `/api/characters` need `API_TOKEN` set in the
   Cloudflare Pages environment.
 
 ## Architecture conventions

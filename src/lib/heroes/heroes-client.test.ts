@@ -5,7 +5,7 @@ describe('heroes-client (SuperHero API)', () => {
   const mockFetch = vi.fn()
 
   beforeEach(() => {
-    vi.stubEnv('TOKEN', 'test-token')
+    vi.stubEnv('API_TOKEN', 'test-token')
     vi.stubGlobal('fetch', mockFetch)
     vi.clearAllMocks()
   })

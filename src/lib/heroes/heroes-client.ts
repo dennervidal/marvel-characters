@@ -11,7 +11,7 @@ type HeroResponse = Hero & {
 }
 
 const fetchJson = async (path: string): Promise<unknown> => {
-  const token = import.meta.env.TOKEN as string
+  const token = import.meta.env.API_TOKEN as string
   const response = await fetch(`${ROOT_SUPERHERO_API_URL}/${token}${path}`)
   if (!response.ok) throw new Error(`SuperHero API error: ${response.status}`)
   return response.json()

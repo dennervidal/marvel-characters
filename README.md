@@ -17,13 +17,13 @@ no comics data; images are superherodb portraits.
 
 ## getting started
 
-Copy `.env.example` to `.env` and set `TOKEN` — a 32-character SuperHero API key from
+Copy `.env.example` to `.env` and set `API_TOKEN` — a 32-character SuperHero API key from
 <https://superheroapi.com/>. It is required at runtime (dev server and the Cloudflare Pages environment
 variable), **not** at build: `pnpm run build` works without it.
 
 ```bash
 pnpm install
-cp .env.example .env  # set TOKEN
+cp .env.example .env  # set API_TOKEN
 pnpm run dev
 ```
 
@@ -61,5 +61,5 @@ Tests are colocated as `*.test.tsx` next to the code. Component tests render ins
 - Build command: `pnpm run build`
 - Output directory: `dist/`
 - Runtime: Node 24
-- Set `TOKEN` (the SuperHero API key) as a Cloudflare Pages environment variable. Details pages render
-  on-demand and are edge-cached by Cloudflare; `/api/characters` also needs `TOKEN` at runtime.
+- Set `API_TOKEN` (the SuperHero API key) as a Cloudflare Pages environment variable. Details pages render
+  on-demand and are edge-cached by Cloudflare; `/api/characters` also needs `API_TOKEN` at runtime.

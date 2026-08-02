@@ -31,7 +31,10 @@ export const fetchCharacters = async ({
   const json = (await fetchJson(
     `/search/${encodeURIComponent(trimmed)}`
   )) as SearchResponse
-  if (json.response !== 'success') return { results: [], total: 0 }
+  if (json.response !== 'success') {
+    console.error('SuperHero API error envelope', json)
+    return { results: [], total: 0 }
+  }
   const all = json.results ?? []
   return {
     results: all.slice(page * limit, page * limit + limit),

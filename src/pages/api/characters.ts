@@ -27,7 +27,8 @@ export async function GET({ request }: APIContext): Promise<Response> {
         }
       }
     )
-  } catch {
+  } catch (error) {
+    console.error('upstream request failed', error)
     return new Response(JSON.stringify({ error: 'Upstream request failed' }), {
       status: 502
     })

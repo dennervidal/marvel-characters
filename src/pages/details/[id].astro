@@ -95,103 +95,146 @@ const workRows: Array<[string, string]> = [
   ['Occupation', occupation],
   ['Base', base]
 ].filter((row): row is [string, string] => Boolean(row[1]))
+
+const initial = hero.name ? hero.name.charAt(0).toUpperCase() : '?'
 ---
 
 <MainLayout title={hero.name ?? 'Character'}>
-  <div class='mx-auto max-w-5xl px-4 py-8'>
+  <div class='mx-auto max-w-5xl px-4 py-8' transition:name='details'>
     <div class='grid gap-8 md:grid-cols-12'>
       <section class='md:col-span-4'>
-        {
-          imageUrl && (
-            <img
-              id='hero-image'
-              src={imageUrl}
-              alt={hero.name ?? 'character thumbnail'}
-              width={490}
-              height={490}
-              class='h-auto w-full border-[3px] border-ink'
-            />
-          )
-        }
+        <a
+          href='/'
+          class='mb-6 inline-block border-4 border-border bg-white px-4 py-2 font-mono text-[0.65rem] uppercase tracking-wide shadow-hard-3 hover:bg-secondary'
+        >
+          ← BACK
+        </a>
+        <div class='border-4 border-border bg-primary p-3 shadow-hard-6'>
+          {
+            imageUrl && (
+              <img
+                id='hero-image'
+                src={imageUrl}
+                alt={hero.name ?? 'character thumbnail'}
+                width={490}
+                height={490}
+                class='aspect-[4/5] w-full object-cover border-[3px] border-border'
+              />
+            )
+          }
+          <div
+            id='hero-fallback'
+            class='halftone flex aspect-[4/5] w-full items-center justify-center border-[3px] border-border'
+            style='display: none'
+          >
+            <span
+              class='font-display text-8xl uppercase leading-none text-white'
+            >
+              {initial}
+            </span>
+          </div>
+        </div>
       </section>
       <section class='md:col-span-8'>
         <h1
-          class='border-[3px] border-ink bg-yellow px-4 py-2 text-3xl font-bold uppercase text-ink'
+          class='border-[3px] border-border bg-secondary px-4 py-2 font-display text-3xl uppercase text-foreground'
         >
           {hero.name}
         </h1>
         {
           fullName && (
-            <p class='mt-2 text-sm font-bold uppercase tracking-wider text-muted'>
+            <p class='mt-2 border-[3px] border-border bg-white px-4 py-2 font-body text-sm font-bold'>
               {fullName}
             </p>
           )
         }
         {
           aliases.length > 0 && (
-            <p class='mt-1 text-sm'>Also known as: {aliases.join(', ')}</p>
+            <p class='mt-2 text-sm text-muted-foreground'>
+              Also known as: {aliases.join(', ')}
+            </p>
           )
         }
         {
           (publisher || alignment) && (
             <div class='mt-4 flex flex-wrap gap-2'>
               {publisher && (
-                <span class='border-2 border-ink bg-surface px-2 py-1 text-xs font-bold uppercase'>
+                <span class='border-2 border-border bg-background px-2 py-1 font-mono text-[0.55rem] uppercase tracking-wide'>
                   {publisher}
                 </span>
               )}
               {alignment && (
-                <span class='border-2 border-ink bg-surface px-2 py-1 text-xs font-bold uppercase'>
+                <span class='border-2 border-border bg-background px-2 py-1 font-mono text-[0.55rem] uppercase tracking-wide'>
                   {alignment}
                 </span>
               )}
             </div>
           )
         }
-        <h2 class='mt-8 text-xl font-bold uppercase'>Powerstats</h2>
+        <h2 class='mt-8 font-display text-xl uppercase'>
+          <span class='mr-2 inline-block h-4 w-1.5 bg-foreground align-middle'
+          ></span>
+          Powerstats
+        </h2>
         <div class='mt-4'>
           <PowerStats powerstats={hero.powerstats ?? {}} />
         </div>
-        <h2 class='mt-8 text-xl font-bold uppercase'>Biography</h2>
-        <dl class='mt-2'>
+        <h2 class='mt-8 font-display text-xl uppercase'>
+          <span class='mr-2 inline-block h-4 w-1.5 bg-foreground align-middle'
+          ></span>
+          Biography
+        </h2>
+        <dl class='mt-4 border-4 border-border bg-white p-4 shadow-hard-6'>
           {
             biographyRows.map(([label, value]) => (
-              <div class='border-b border-line py-2'>
-                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+              <div class='border-b-2 border-[#e5e5e5] py-2'>
+                <dt class='font-mono text-[0.55rem] uppercase tracking-wide text-muted-foreground'>
                   {label}
                 </dt>
-                <dd class='mt-1 text-sm'>{value}</dd>
+                <dd class='mt-1 text-sm font-semibold'>{value}</dd>
               </div>
             ))
           }
         </dl>
-        <h2 class='mt-8 text-xl font-bold uppercase'>Appearance</h2>
-        <dl class='mt-2'>
+        <h2 class='mt-8 font-display text-xl uppercase'>
+          <span class='mr-2 inline-block h-4 w-1.5 bg-foreground align-middle'
+          ></span>
+          Appearance
+        </h2>
+        <dl class='mt-4 border-4 border-border bg-white p-4 shadow-hard-6'>
           {
             appearanceRows.map(([label, value]) => (
-              <div class='border-b border-line py-2'>
-                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+              <div class='border-b-2 border-[#e5e5e5] py-2'>
+                <dt class='font-mono text-[0.55rem] uppercase tracking-wide text-muted-foreground'>
                   {label}
                 </dt>
-                <dd class='mt-1 text-sm'>{value}</dd>
+                <dd class='mt-1 text-sm font-semibold'>{value}</dd>
               </div>
             ))
           }
         </dl>
-        <h2 class='mt-8 text-xl font-bold uppercase'>Work</h2>
-        <dl class='mt-2'>
+        <h2 class='mt-8 font-display text-xl uppercase'>
+          <span class='mr-2 inline-block h-4 w-1.5 bg-foreground align-middle'
+          ></span>
+          Work
+        </h2>
+        <dl class='mt-4 border-4 border-border bg-white p-4 shadow-hard-6'>
           {
             workRows.map(([label, value]) => (
-              <div class='border-b border-line py-2'>
-                <dt class='text-xs font-bold uppercase tracking-wider text-muted'>
+              <div class='border-b-2 border-[#e5e5e5] py-2'>
+                <dt class='font-mono text-[0.55rem] uppercase tracking-wide text-muted-foreground'>
                   {label}
                 </dt>
-                <dd class='mt-1 text-sm'>{value}</dd>
+                <dd class='mt-1 text-sm font-semibold'>{value}</dd>
               </div>
             ))
           }
         </dl>
-        <h2 class='mt-8 text-xl font-bold uppercase'>Connections</h2>
+        <h2 class='mt-8 font-display text-xl uppercase'>
+          <span class='mr-2 inline-block h-4 w-1.5 bg-foreground align-middle'
+          ></span>
+          Connections
+        </h2>
         {
           affiliation && (
             <p class='mt-2 text-[15px] leading-relaxed'>
@@ -212,8 +255,10 @@ const workRows: Array<[string, string]> = [
 </MainLayout>
 
 <script>
-  const heroImage = document.querySelector<HTMLImageElement>('#hero-image')
-  heroImage?.addEventListener('error', () => {
-    heroImage.style.display = 'none'
+  const image = document.getElementById('hero-image')
+  const fallback = document.getElementById('hero-fallback')
+  image?.addEventListener('error', () => {
+    image.style.display = 'none'
+    if (fallback) fallback.style.display = 'flex'
   })
 </script>

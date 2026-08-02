@@ -1,9 +1,4 @@
-/* eslint no-console: 0 */
-import React, { CSSProperties, ErrorInfo, ReactNode } from 'react'
-import Link from 'next/link'
-
-const style: CSSProperties = { textAlign: 'center' }
-const sadFaceEmoji = `:'(`
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 
 interface Props {
   children?: ReactNode
@@ -13,40 +8,32 @@ interface State {
   hasError: boolean
 }
 
-// Must be class
-class ErrorBoundary extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
+export class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = { hasError: false }
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.log('Error Catch')
-    console.log(error)
-  }
-
-  static getDerivedStateFromError(_: Error) {
+  static getDerivedStateFromError(): State {
     return { hasError: true }
   }
 
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('ErrorBoundary caught', error, info)
+  }
+
   render() {
-    const { state, props } = this
-
-    if (state.hasError) {
-      console.error('hasError')
-
+    if (this.state.hasError) {
       return (
-        <div style={style}>
-          <h1>{sadFaceEmoji}</h1>
-          <br />
-          <h1>Algum Erro Aconteceu, estamos tristes</h1>
-          <Link href='/'>Volte aqui</Link>
+        <div className='py-16 text-center'>
+          <h1 className='text-3xl font-bold'>:'(</h1>
+          <p className='mt-4'>Algum Erro Aconteceu, estamos tristes</p>
+          <a href='/' className='mt-6 inline-block underline'>
+            Volte aqui
+          </a>
         </div>
       )
     }
-
-    return props.children
+    return this.props.children
   }
 }
-
-export { ErrorBoundary }

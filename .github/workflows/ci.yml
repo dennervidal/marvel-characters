@@ -3,110 +3,19 @@ name: ci
 on: push
 
 jobs:
-  setup:
+  ci:
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
         with:
-          version: latest
-      - name: setup node
-        uses: actions/setup-node@v3
+          version: '11.17.0'
+      - uses: actions/setup-node@v7
         with:
-          node-version: '16'
-          cache: 'pnpm'
-
-      - name: install
-        run: pnpm install
-
-      - name: lint
-        run: pnpm run lint
-
-      - name: cache
-        uses: actions/cache@v3
-        id: ci-setup-cache
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-        
-  test:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-    needs: setup
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
-      - name: restore
-        uses: actions/cache@v3
-        id: ci-setup-cache
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-      - name: test
-        run: pnpm run test:ci
-
-  build:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-    needs: test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
-      - name: restore
-        uses: actions/cache@v3
-        id: ci-setup-cache
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-      - name: build
-        env:
-          NEXT_PUBLIC_API_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_API_PUBLIC_KEY }}
-          MARVEL_PRIVATE_KEY: ${{ secrets.MARVEL_PRIVATE_KEY }}
-        run: pnpm run build
-
-      - name: cache
-        uses: actions/cache@v3
-        id: ci-build-cache
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-#  deploy:
-#    runs-on: ubuntu-latest
-#    concurrency:
-#      group: ${{ github.workflow }}-${{ github.ref }}
-#      cancel-in-progress: true
-#    needs: build
-#    if: ${{ github.ref == 'refs/heads/master' }}
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: restore
-#        uses: actions/cache@v3
-#        id: ci-build-cache
-#        with:
-#          path: ./*
-#          key: ${{ github.sha }}
-#
-#      - name: deploy
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./build
-#          user_name: 'github-actions[bot]'
-#          user_email: 'github-actions[bot]@users.noreply.github.com'
-#          commit_message: 'Deploy to GitHub pages:'
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: pnpm run test:ci
+      - run: pnpm run build

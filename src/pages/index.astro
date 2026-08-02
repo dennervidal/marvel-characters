@@ -1,0 +1,13 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro'
+import { CharactersExplorer } from '@/components/CharactersExplorer'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+---
+
+<MainLayout title='marvel characters'>
+  <div class='mx-auto max-w-5xl px-4 py-8'>
+    <ErrorBoundary>
+      <CharactersExplorer client:load />
+    </ErrorBoundary>
+  </div>
+</MainLayout>

@@ -1,26 +1,13 @@
-import React from 'react'
-import Pagination from '@material-ui/lab/Pagination'
-import { MainDiv } from './styled'
-import { useNavigation } from './hooks'
+import { Pagination } from '@/components/ui'
 
-export const Navigation = () => {
-  const { isDetails, page, total, handlePageChange } = useNavigation()
-
-  return (
-    <MainDiv isDetails={isDetails}>
-      <Pagination
-        shape='rounded'
-        showFirstButton={page > 1}
-        showLastButton={page < total}
-        count={total}
-        page={page}
-        onChange={handlePageChange}
-        siblingCount={0}
-        hideNextButton={page === total}
-        hidePrevButton={page === 1}
-      />
-    </MainDiv>
-  )
-}
-
-Navigation.propTypes = {}
+export const Navigation = ({
+  page,
+  total,
+  onChange
+}: {
+  page: number
+  total: number
+  onChange: (page: number) => void
+}) => (
+  <Pagination count={total} page={page} onChange={onChange} siblingCount={0} />
+)

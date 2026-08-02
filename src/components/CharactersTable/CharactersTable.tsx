@@ -1,99 +1,76 @@
-import React from 'react'
-import { TableRow as MuiTRow, TableBody, TableHead } from '@material-ui/core'
-import {
-  Table,
-  Typography,
-  TableCell,
-  TableRow,
-  ColumnDiv,
-  RowDiv,
-  Avatar
-} from './styled'
-import { Character } from 'types'
-import { useCharactersTable } from './hooks'
+import { Avatar, Typography } from '@/components/ui'
+import { heroImageUrl } from '@/lib/heroes/hero-image'
+import type { Hero } from '@/types'
 
 export const CharactersTable = ({
   characters
 }: {
-  characters: Character[] | undefined
+  characters: Hero[] | undefined
 }) => {
-  const { redirectToDetails, mobile } = useCharactersTable()
+  const redirectToDetails = (id?: string) => {
+    if (id) window.location.assign(`/details/${id}`)
+  }
 
   return (
-    <Table>
-      <TableHead>
-        <MuiTRow>
-          <TableCell key='character' header>
-            <Typography
-              variant='subtitle2'
-              fontSize={12}
-              marginLeft={mobile && 68}
-              header
-            >
-              Character
-            </Typography>
-          </TableCell>
-          <TableCell key='series' header mobile={mobile}>
-            <Typography variant='subtitle2' fontSize={12} header>
-              Series
-            </Typography>
-          </TableCell>
-          <TableCell key='events' header mobile={mobile}>
-            <Typography variant='subtitle2' fontSize={12} header>
-              Events
-            </Typography>
-          </TableCell>
-        </MuiTRow>
-      </TableHead>
-      <TableBody>
-        {(characters ?? []).map(
-          ({ name, thumbnail, events, series, id }, idx) => (
-            <TableRow
-              key={`${name}-${idx}`}
-              mobile={mobile}
+    <table className='w-full border-collapse bg-surface'>
+      <thead>
+        <tr className='border-b border-line text-left'>
+          <th scope='col' className='px-4 py-3'>
+            Character
+          </th>
+          <th scope='col' className='hidden px-4 py-3 md:table-cell'>
+            Publisher
+          </th>
+          <th scope='col' className='hidden px-4 py-3 md:table-cell'>
+            Alignment
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {(characters ?? []).map(({ name, biography, id }) => {
+          const avatarSrc = heroImageUrl(id, name)
+          return (
+            <tr
+              key={`${name}-${id}`}
               onClick={() => redirectToDetails(id)}
+              className='cursor-pointer border-b border-line last:border-b-0 hover:bg-background'
             >
-              <TableCell>
-                <RowDiv>
-                  {thumbnail?.path && (
+              <td className='px-4 py-3'>
+                <div className='flex items-center gap-6'>
+                  {avatarSrc && (
                     <Avatar
                       width={48}
                       height={48}
-                      src={`${thumbnail?.path}.${thumbnail?.extension}`}
+                      src={avatarSrc}
+                      alt={name ?? 'character thumbnail'}
+                      onError={event => {
+                        event.currentTarget.style.display = 'none'
+                      }}
                     />
                   )}
-                  <Typography
-                    variant='subtitle2'
-                    fontWeight={600}
-                    fontSize={16}
-                    marginLeft={24}
-                  >
+                  <Typography variant='body' className='font-semibold'>
                     {name}
                   </Typography>
-                </RowDiv>
-              </TableCell>
-              <TableCell mobile={mobile}>
-                <ColumnDiv>
-                  {(series?.items?.slice(0, 3) ?? []).map(({ name }, idx) => (
-                    <Typography key={`${name}-${idx}`} variant='caption'>
-                      {name}
-                    </Typography>
-                  ))}
-                </ColumnDiv>
-              </TableCell>
-              <TableCell mobile={mobile}>
-                <ColumnDiv>
-                  {(events?.items?.slice(0, 3) ?? []).map(({ name }, idx) => (
-                    <Typography key={`${name}-${idx}`} variant='caption'>
-                      {name}
-                    </Typography>
-                  ))}
-                </ColumnDiv>
-              </TableCell>
-            </TableRow>
+                </div>
+              </td>
+              <td className='hidden px-4 py-3 md:table-cell'>
+                {biography?.publisher && biography.publisher !== '-' && (
+                  <Typography variant='caption' className='block'>
+                    {biography.publisher}
+                  </Typography>
+                )}
+              </td>
+              <td className='hidden px-4 py-3 md:table-cell'>
+                {biography?.alignment && biography.alignment !== '-' && (
+                  <Typography variant='caption' className='block'>
+                    {biography.alignment}
+                  </Typography>
+                )}
+              </td>
+            </tr>
           )
-        )}
-      </TableBody>
-    </Table>
+        })}
+      </tbody>
+    </table>
   )
 }

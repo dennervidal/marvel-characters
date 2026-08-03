@@ -94,6 +94,19 @@ describe('GET /api/characters', () => {
     })
   })
 
+  it('maps 1-based page and 0-based limit to the paged fetch (page 0, limit 100)', async () => {
+    const response = await GET({
+      request: request({ q: ' a ', page: '3', limit: '10' })
+    } as never)
+    const body = await response.json()
+    expect(vi.mocked(fetchCharacters)).toHaveBeenCalledWith({
+      query: 'a',
+      page: 0,
+      limit: 100
+    })
+    expect(body.results).toHaveLength(0)
+  })
+
   it('filters by heroes alignment and paginates', async () => {
     const response = await GET({
       request: request({ q: 'a', page: '1', limit: '2', filter: 'heroes' })

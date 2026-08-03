@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { Zap } from 'lucide-react'
-import type { Hero } from '@/types'
+import type { CharacterFilter, Hero } from '@/types'
 import { heroImageUrl } from '@/lib/heroes/hero-image'
 
 const FALLBACK_COLORS = [
@@ -23,7 +23,15 @@ const fallbackColor = (name?: string) => {
 const initialLetter = (name?: string) =>
   name ? name.charAt(0).toUpperCase() : '?'
 
-export const HeroCard = ({ hero }: { hero: Hero }) => {
+export const HeroCard = ({
+  hero,
+  query,
+  filter
+}: {
+  hero: Hero
+  query?: string
+  filter?: CharacterFilter
+}) => {
   const [imageFailed, setImageFailed] = useState(false)
   const name = hero.name ?? 'Unknown'
   const alignment = hero.biography?.alignment
@@ -32,9 +40,17 @@ export const HeroCard = ({ hero }: { hero: Hero }) => {
   const showPower =
     power !== undefined && power !== '-' && !Number.isNaN(powerValue)
 
+  const href = (() => {
+    const params = new URLSearchParams()
+    if (query) params.set('query', query)
+    if (filter && filter !== 'all') params.set('filter', filter)
+    const search = params.toString()
+    return search ? `/details/${hero.id}?${search}` : `/details/${hero.id}`
+  })()
+
   return (
     <motion.a
-      href={`/details/${hero.id}`}
+      href={href}
       whileHover={{ x: -4, y: -4, boxShadow: '8px 8px 0 #0a0a0a' }}
       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       className='block cursor-pointer border-4 border-border bg-white shadow-hard overflow-hidden'

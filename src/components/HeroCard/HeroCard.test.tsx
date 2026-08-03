@@ -20,6 +20,22 @@ describe('HeroCard', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', '/details/70')
   })
 
+  it('carries the search state in the details link', () => {
+    render(<HeroCard hero={hero} query='thor' filter='heroes' />)
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/details/70?query=thor&filter=heroes'
+    )
+  })
+
+  it('omits the filter param when it is all', () => {
+    render(<HeroCard hero={hero} query='thor' filter='all' />)
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/details/70?query=thor'
+    )
+  })
+
   it('shows the hero image with the akabab url', () => {
     render(<HeroCard hero={hero} />)
     const image = screen.getByRole('img', { name: 'Hulk portrait' })

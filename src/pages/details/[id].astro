@@ -97,6 +97,16 @@ const workRows: Array<[string, string]> = [
 ].filter((row): row is [string, string] => Boolean(row[1]))
 
 const initial = hero.name ? hero.name.charAt(0).toUpperCase() : '?'
+
+const backHref = (() => {
+  const params = new URLSearchParams()
+  const query = Astro.url.searchParams.get('query')
+  const filter = Astro.url.searchParams.get('filter')
+  if (query) params.set('query', query)
+  if (filter) params.set('filter', filter)
+  const search = params.toString()
+  return search ? `/?${search}` : '/'
+})()
 ---
 
 <MainLayout title={hero.name ?? 'Character'}>
@@ -104,7 +114,7 @@ const initial = hero.name ? hero.name.charAt(0).toUpperCase() : '?'
     <div class='grid gap-8 md:grid-cols-12'>
       <section class='md:col-span-4'>
         <a
-          href='/'
+          href={backHref}
           class='mb-6 inline-block border-4 border-border bg-white px-4 py-2 font-mono text-[0.65rem] uppercase tracking-wide shadow-hard-3 hover:bg-secondary'
         >
           ← BACK

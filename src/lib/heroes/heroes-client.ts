@@ -1,3 +1,4 @@
+import { getSecret } from 'astro:env/server'
 import type { Hero } from '@/types'
 import { PAGE_LIMIT, ROOT_SUPERHERO_API_URL } from './constants'
 
@@ -11,7 +12,8 @@ type HeroResponse = Hero & {
 }
 
 const fetchJson = async (path: string): Promise<unknown> => {
-  const token = import.meta.env.API_TOKEN as string
+  const token = getSecret('API_TOKEN')
+  if (!token) throw new Error('API_TOKEN secret is not configured')
   const response = await fetch(`${ROOT_SUPERHERO_API_URL}/${token}${path}`)
   if (!response.ok) throw new Error(`SuperHero API error: ${response.status}`)
   return response.json()

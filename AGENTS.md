@@ -28,10 +28,13 @@
 
 `.env.example` (and the local `.env`) contains a single key:
 
-- `API_TOKEN` — SuperHero API key (32-char, from superheroapi.com). **Required at runtime**, server-only: read via
-  `import.meta.env.API_TOKEN` in `src/lib/heroes/heroes-client.ts`, never exposed to client bundles. The build
-  needs no env, but runtime on-demand pages (`/details/[id]`) and `/api/characters` need `API_TOKEN` set in the
-  Cloudflare Pages environment.
+- `API_TOKEN` — SuperHero API key (32-char, from superheroapi.com). **Required at runtime**, server-only: read at
+  runtime via `getSecret('API_TOKEN')` from `astro:env/server` in `src/lib/heroes/heroes-client.ts` (declared in the
+  `env.schema` of `astro.config.mjs`). Never exposed to client bundles and **never inlined at build time** — the
+  Cloudflare Workers `API_TOKEN` secret binding is the source of truth in production (all deployed versions share
+  it), while `.env`/`process.env` covers local `astro dev` and tests. Do **not** go back to `import.meta.env` reads:
+  they are statically inlined by Vite at build time, so a deploy built without the env ships a broken
+  `/undefined` token. The build itself needs no env.
 
 ## Architecture conventions
 

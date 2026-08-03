@@ -1,5 +1,7 @@
 # Marvel Brutal (Neo-Brutalist Design System) Specification
 
+> **Note:** This is the legacy spec. The source of truth for implemented tokens is `src/styles/global.css` (`@theme` block: `bg-background`/`bg-foreground`/`bg-primary`/`bg-secondary`/`shadow-hard-*`/`font-display`/`font-body`/`font-mono` + `.stripes-yellow`/`.stripes-red`/`.halftone` utilities).
+
 ## 1. COLORS
 
 ### Color Palette

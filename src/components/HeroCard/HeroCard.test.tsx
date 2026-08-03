@@ -36,6 +36,22 @@ describe('HeroCard', () => {
     )
   })
 
+  it('carries the page in the details link when greater than 1', () => {
+    render(<HeroCard hero={hero} query='thor' page={2} />)
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/details/70?query=thor&page=2'
+    )
+  })
+
+  it('omits the page param when on the first page', () => {
+    render(<HeroCard hero={hero} query='thor' filter='heroes' page={1} />)
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/details/70?query=thor&filter=heroes'
+    )
+  })
+
   it('shows the hero image with the akabab url', () => {
     render(<HeroCard hero={hero} />)
     const image = screen.getByRole('img', { name: 'Hulk portrait' })

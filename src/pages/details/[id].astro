@@ -102,8 +102,10 @@ const backHref = (() => {
   const params = new URLSearchParams()
   const query = Astro.url.searchParams.get('query')
   const filter = Astro.url.searchParams.get('filter')
+  const page = Astro.url.searchParams.get('page')
   if (query) params.set('query', query)
   if (filter) params.set('filter', filter)
+  if (page) params.set('page', page)
   const search = params.toString()
   return search ? `/?${search}` : '/'
 })()

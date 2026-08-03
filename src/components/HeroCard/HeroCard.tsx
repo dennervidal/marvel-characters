@@ -26,11 +26,13 @@ const initialLetter = (name?: string) =>
 export const HeroCard = ({
   hero,
   query,
-  filter
+  filter,
+  page
 }: {
   hero: Hero
   query?: string
   filter?: CharacterFilter
+  page?: number
 }) => {
   const [imageFailed, setImageFailed] = useState(false)
   const name = hero.name ?? 'Unknown'
@@ -44,6 +46,7 @@ export const HeroCard = ({
     const params = new URLSearchParams()
     if (query) params.set('query', query)
     if (filter && filter !== 'all') params.set('filter', filter)
+    if (page && page > 1) params.set('page', String(page))
     const search = params.toString()
     return search ? `/details/${hero.id}?${search}` : `/details/${hero.id}`
   })()

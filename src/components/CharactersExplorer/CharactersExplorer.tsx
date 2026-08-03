@@ -94,7 +94,12 @@ const Explorer = () => {
                 exit={{ opacity: 0, scale: 0.94 }}
                 transition={{ delay: Math.min(index * 0.035, 0.28) }}
               >
-                <HeroCard hero={hero} query={query} filter={filter} />
+                <HeroCard
+                  hero={hero}
+                  query={query}
+                  filter={filter}
+                  page={page}
+                />
               </motion.div>
             ))}
           </AnimatePresence>

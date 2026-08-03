@@ -31,6 +31,12 @@ test('back link restores the search state when present in the url', async () => 
   expect(view).toContain('href="/?query=thor&amp;filter=heroes"')
 })
 
+test('back link restores the page when present in the url', async () => {
+  vi.mocked(fetchCharacterById).mockResolvedValue(hero)
+  const view = await render('?query=thor&filter=heroes&page=3')
+  expect(view).toContain('href="/?query=thor&amp;filter=heroes&amp;page=3"')
+})
+
 test('back link falls back to the home page when landing without state', async () => {
   vi.mocked(fetchCharacterById).mockResolvedValue(hero)
   const view = await render()

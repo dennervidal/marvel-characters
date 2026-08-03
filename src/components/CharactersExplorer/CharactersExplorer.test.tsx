@@ -26,6 +26,7 @@ describe('CharactersExplorer', () => {
   beforeEach(() => {
     mockFetch.mockResolvedValue(charactersResponse)
     vi.stubGlobal('fetch', mockFetch)
+    vi.clearAllMocks()
     window.history.replaceState({}, '', '/')
   })
 
@@ -100,6 +101,46 @@ describe('CharactersExplorer', () => {
       'aria-pressed',
       'true'
     )
+  })
+
+  it('restores the page from the url and links details with the page state', async () => {
+    window.history.replaceState({}, '', '/?query=hulk&page=2')
+    render(<CharactersExplorer />)
+    await screen.findByText('Hulk')
+    const callUrl = new URL(mockFetch.mock.calls.at(-1)?.[0] as string)
+    expect(callUrl.searchParams.get('page')).toBe('2')
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/details/2?query=hulk&page=2'
+    )
+  })
+
+  it('stores the page in the url when navigating pages', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        results: [{ id: '2', name: 'Hulk' }],
+        total: 3,
+        counts: { heroes: 1, villains: 0, marvel: 0, dc: 0, others: 0 }
+      })
+    })
+    render(<CharactersExplorer />)
+    search('hulk')
+    await screen.findByText('Hulk')
+    fireEvent.click(screen.getByRole('button', { name: 'go to page 2' }))
+    const pageTwoCall = mockFetch.mock.calls.at(-1)?.[0] as string
+    expect(new URL(pageTwoCall).searchParams.get('page')).toBe('2')
+    expect(window.location.search).toContain('page=2')
+  })
+
+  it('clears the page param from the url when the query changes', async () => {
+    window.history.replaceState({}, '', '/?query=hulk&page=2')
+    render(<CharactersExplorer />)
+    await screen.findByText('Hulk')
+    search('thor')
+    expect(new URL(window.location.href).searchParams.get('page')).toBeNull()
+    const latestCall = mockFetch.mock.calls.at(-1)?.[0] as string
+    expect(new URL(latestCall).searchParams.get('page')).toBe('1')
   })
 
   it('shows an error state with retry when the fetch fails', async () => {

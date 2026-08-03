@@ -53,7 +53,13 @@ export const useCharactersExplorer = () => {
     const value = new URLSearchParams(window.location.search).get('filter')
     return isCharacterFilter(value) ? value : 'all'
   })
-  const [page, setPage] = useState<number>(1)
+  const [page, setPage] = useState<number>(() => {
+    if (typeof window === 'undefined') return 1
+    const value = Number(
+      new URLSearchParams(window.location.search).get('page')
+    )
+    return Number.isInteger(value) && value > 0 ? value : 1
+  })
 
   const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ['characters', query, filter, page],
@@ -61,7 +67,13 @@ export const useCharactersExplorer = () => {
     enabled: !isEmpty(query)
   })
 
-  const gotoPage = useCallback((nextPage: number) => setPage(nextPage), [])
+  const gotoPage = useCallback((nextPage: number) => {
+    setPage(nextPage)
+    const url = new URL(window.location.href)
+    if (nextPage <= 1) url.searchParams.delete('page')
+    else url.searchParams.set('page', String(nextPage))
+    window.history.pushState({}, '', url.toString())
+  }, [])
 
   const updateQuery = useCallback((value: string) => {
     setQuery(value)
@@ -69,6 +81,7 @@ export const useCharactersExplorer = () => {
     const url = new URL(window.location.href)
     if (isEmpty(value)) url.searchParams.delete('query')
     else url.searchParams.set('query', value)
+    url.searchParams.delete('page')
     window.history.pushState({}, '', url.toString())
   }, [])
 
@@ -78,6 +91,7 @@ export const useCharactersExplorer = () => {
     const url = new URL(window.location.href)
     if (value === 'all') url.searchParams.delete('filter')
     else url.searchParams.set('filter', value)
+    url.searchParams.delete('page')
     window.history.pushState({}, '', url.toString())
   }, [])
 

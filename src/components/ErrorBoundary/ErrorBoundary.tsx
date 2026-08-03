@@ -27,9 +27,9 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className='py-16 text-center'>
           <h1 className='text-3xl font-bold'>:'(</h1>
-          <p className='mt-4'>Algum Erro Aconteceu, estamos tristes</p>
+          <p className='mt-4'>Something went wrong, we're sad</p>
           <a href='/' className='mt-6 inline-block underline'>
-            Volte aqui
+            Back home
           </a>
         </div>
       )

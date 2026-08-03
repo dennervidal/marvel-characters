@@ -1229,11 +1229,21 @@ export type Hero = {
 
 - [ ] **Step 5: Update README.md**
 
-Cover (keep existing structure): stack stays the same; **data**: SuperHero API (`superheroapi.com`) — all universes, no comics data, images are superherodb portraits; **setup**: `TOKEN` (32-char SuperHero API key) in `.env` — required at runtime (dev + Cloudflare Pages env var), NOT at build; **commands** unchanged; folder structure: `src/lib/heroes/` (server-only client), `src/components/PowerStats/`; notes: details pages render on-demand and are edge-cached by Cloudflare.
+Cover (keep existing structure): stack stays the same; **data**: SuperHero API (`superheroapi.com`) — all universes, no
+comics data, images are superherodb portraits; **setup**: `TOKEN` (32-char SuperHero API key) in `.env` — required at
+runtime (dev `.env` + Cloudflare Workers secret binding), NOT at build; **commands** unchanged; folder structure:
+`src/lib/heroes/` (server-only client), `src/components/PowerStats/`; notes: details pages render on-demand and are
+edge-cached by Cloudflare.
 
 - [ ] **Step 6: Update AGENTS.md**
 
-Update: stack section (server-only data access via `src/lib/heroes/heroes-client.ts` — `fetchCharacters({ query, page, limit })`, `fetchCharacterById`; called from Astro frontmatter and API routes, never from islands; islands fetch through `src/pages/api/*`; `TOKEN` env var = SuperHero API key, runtime-required, server-only, never in client bundles), environment section (drop mock-provider wording, note build needs no env but runtime/on-demand pages and `/api/characters` need `TOKEN` in the Cloudflare Pages env), architecture conventions (details page is on-demand `prerender = false` with `Cache-Control` edge caching; `PowerStats.astro` lives in `src/components/PowerStats/`).
+Update: stack section (server-only data access via `src/lib/heroes/heroes-client.ts` —
+`fetchCharacters({ query, page, limit })`, `fetchCharacterById`; called from Astro frontmatter and API routes, never
+from islands; islands fetch through `src/pages/api/*`; `TOKEN` env var = SuperHero API key, runtime-required,
+server-only, never in client bundles), environment section (drop mock-provider wording, note build needs no env but
+runtime/on-demand pages and `/api/characters` need `TOKEN` in the Cloudflare Workers env), architecture conventions (
+details page is on-demand `prerender = false` with `Cache-Control` edge caching; `PowerStats.astro` lives in
+`src/components/PowerStats/`).
 
 - [ ] **Step 7: Full verification pass**
 

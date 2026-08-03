@@ -1,17 +1,20 @@
+// @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fetchCharacterById, fetchCharacters } from './heroes-client'
+
+vi.mock('astro:env/server', () => ({
+  getSecret: vi.fn(() => 'test-token')
+}))
 
 describe('heroes-client (SuperHero API)', () => {
   const mockFetch = vi.fn()
 
   beforeEach(() => {
-    vi.stubEnv('API_TOKEN', 'test-token')
     vi.stubGlobal('fetch', mockFetch)
     vi.clearAllMocks()
   })
 
   afterEach(() => {
-    vi.unstubAllEnvs()
     vi.unstubAllGlobals()
   })
 

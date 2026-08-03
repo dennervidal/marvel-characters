@@ -5,9 +5,26 @@ export const prerender = false
 ---
 
 <MainLayout title='Not found'>
-  <div class='mx-auto max-w-5xl px-4 py-8 text-center'>
-    <h1 class='text-6xl font-bold'>404</h1>
-    <p class='mt-4'>Ainda nada aqui, :(</p>
-    <a href='/' class='mt-6 inline-block underline'>Volte aqui</a>
+  <div class='mx-auto max-w-5xl px-4 py-8'>
+    <div
+      class='mx-auto w-full max-w-2xl border-4 border-border bg-white shadow-hard-8'
+    >
+      <div class='stripes-yellow h-3 border-b-4 border-border'></div>
+      <div class='flex flex-col items-center gap-3 px-6 py-12 text-center'>
+        <h1 class='font-display text-[7rem] uppercase leading-none'>404</h1>
+        <p
+          class='font-mono text-[0.65rem] uppercase tracking-wide text-muted-foreground'
+        >
+          NOTHING HERE, :(
+        </p>
+        <a
+          href='/'
+          class='mt-2 inline-flex items-center gap-2 border-4 border-border bg-primary px-6 py-2.5 font-mono text-[0.65rem] uppercase tracking-wide text-white shadow-hard transition-colors hover:bg-[#c0392b]'
+        >
+          BACK HOME
+        </a>
+      </div>
+      <div class='stripes-red h-3 border-t-4 border-border'></div>
+    </div>
   </div>
 </MainLayout>

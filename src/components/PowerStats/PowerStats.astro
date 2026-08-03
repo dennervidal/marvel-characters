@@ -24,12 +24,12 @@ const STATS: { key: keyof Powerstats; label: string }[] = [
           : 0
       return (
         <div>
-          <div class='mb-1 flex justify-between text-xs font-bold uppercase tracking-wider'>
+          <div class='mb-1 flex justify-between font-mono text-[0.55rem] uppercase tracking-wide text-muted-foreground'>
             <span>{label}</span>
             <span>{raw && raw !== '-' ? raw : '-'}</span>
           </div>
-          <div class='h-2 border-2 border-ink bg-gray-light'>
-            <div class='h-full bg-ink' style={{ width: `${width}%` }} />
+          <div class='h-3 border-2 border-border bg-white'>
+            <div class='h-full bg-primary' style={{ width: `${width}%` }} />
           </div>
         </div>
       )

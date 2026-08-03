@@ -1,15 +1,16 @@
 import type { ElementType, ReactNode } from 'react'
 
 const variantClasses: Record<string, string> = {
-  h1: 'text-5xl font-bold',
-  h2: 'text-4xl font-bold',
-  h3: 'text-3xl font-bold',
+  h1: 'font-display text-5xl font-normal uppercase',
+  h2: 'font-display text-4xl font-normal uppercase',
+  h3: 'font-display text-3xl font-normal uppercase',
   h4: 'text-2xl font-bold',
   h5: 'text-xl font-bold',
   h6: 'text-lg font-semibold',
-  subtitle: 'text-sm',
-  body: 'text-base',
-  caption: 'text-xs'
+  subtitle: 'font-body text-sm',
+  body: 'font-body text-base',
+  caption: 'text-xs',
+  mono: 'font-mono text-xs uppercase tracking-wider'
 }
 
 const variantTags: Record<string, ElementType> = {
@@ -21,7 +22,8 @@ const variantTags: Record<string, ElementType> = {
   h6: 'h6',
   subtitle: 'span',
   body: 'p',
-  caption: 'span'
+  caption: 'span',
+  mono: 'span'
 }
 
 export const Typography = ({

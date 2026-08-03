@@ -41,3 +41,12 @@ export type Hero = {
   connections?: Connections
   image?: { url?: string }
 }
+export type CharacterFilter =
+  'all' | 'heroes' | 'villains' | 'marvel' | 'dc' | 'others'
+export type CharacterCounts = {
+  heroes: number
+  villains: number
+  marvel: number
+  dc: number
+  others: number
+}

@@ -1,9 +1,10 @@
-import { useRef } from 'react'
+import { useEffect, useState } from 'react'
+import { Search, X } from 'lucide-react'
 
 export const SearchInput = ({
-  defaultValue,
+  defaultValue = '',
   onSearch,
-  placeholder,
+  placeholder = 'SEARCH CHARACTERS...',
   className = ''
 }: {
   defaultValue?: string
@@ -11,41 +12,47 @@ export const SearchInput = ({
   placeholder?: string
   className?: string
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const submit = () => onSearch(inputRef.current?.value ?? '')
-
+  const [value, setValue] = useState(defaultValue)
+  useEffect(() => {
+    setValue(defaultValue)
+  }, [defaultValue])
+  const submit = () => onSearch(value.trim())
   return (
-    <div className={`flex ${className}`}>
-      <button
-        type='button'
-        aria-label='search'
-        onClick={submit}
-        className='brutal-btn flex h-12 w-12 shrink-0 items-center justify-center border-[3px] border-ink bg-yellow text-ink'
-      >
-        <svg
-          width='20'
-          height='20'
-          viewBox='0 0 24 24'
-          fill='none'
-          stroke='currentColor'
-          strokeWidth='2'
-        >
-          <circle cx='11' cy='11' r='7' />
-          <line x1='21' y1='21' x2='16.5' y2='16.5' />
-        </svg>
-      </button>
+    <div className={`relative ${className}`}>
+      <Search
+        size={16}
+        className='absolute left-4 top-1/2 -translate-y-1/2 text-foreground'
+        aria-hidden
+      />
       <input
-        ref={inputRef}
-        type='search'
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        aria-label={placeholder}
+        value={value}
+        onChange={event => setValue(event.target.value)}
         onKeyDown={event => {
           if (event.key === 'Enter') submit()
         }}
-        className='h-12 w-full border-[3px] border-l-0 border-ink bg-surface px-4 text-sm font-bold uppercase text-ink outline-none placeholder:font-bold placeholder:normal-case placeholder:text-muted focus:bg-gray-light'
+        onFocus={event =>
+          (event.currentTarget.style.borderColor = 'var(--color-primary)')
+        }
+        onBlur={event =>
+          (event.currentTarget.style.borderColor = 'var(--color-border)')
+        }
+        placeholder={placeholder}
+        className='h-12 w-full border-4 border-border bg-white py-2.5 pl-10 pr-10 font-mono text-xs uppercase tracking-[0.03em] text-foreground shadow-hard outline-none placeholder:text-muted-foreground'
+        aria-label={placeholder}
       />
+      {value && (
+        <button
+          type='button'
+          onClick={() => {
+            setValue('')
+            onSearch('')
+          }}
+          aria-label='Clear search'
+          className='absolute right-3 top-1/2 -translate-y-1/2 text-foreground hover:text-primary'
+        >
+          <X size={16} />
+        </button>
+      )}
     </div>
   )
 }

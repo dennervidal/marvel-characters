@@ -1,9 +1,32 @@
----
-
----
-
-<header class='fixed inset-x-0 top-0 z-10 border-b border-line bg-surface'>
-  <a href='/' class='inline-block px-6 py-4' aria-label='Home'>
-    <img src='/assets/brand.png' alt='Logo' width={100} height={34} />
-  </a>
+<header
+  class='halftone-light fixed inset-x-0 top-0 z-10 border-b-4 border-secondary bg-foreground text-white'
+>
+  <div class='mx-auto flex max-w-7xl items-center justify-between px-6 py-4'>
+    <a href='/' class='flex items-center gap-3'>
+      <span
+        class='grid h-10 w-10 place-items-center border-[3px] border-border bg-primary text-xl text-white'
+      >
+        ⚡
+      </span>
+      <span class='leading-none'>
+        <span class='block font-display text-2xl uppercase tracking-wide'>
+          HERO <span class='text-secondary'>BASE</span>
+        </span>
+        <span
+          class='mt-1 block font-mono text-[0.55rem] uppercase tracking-[0.14em] text-muted-foreground'
+        >
+          superhero database
+        </span>
+      </span>
+    </a>
+    <nav class='hidden gap-1 md:flex'>
+      <a
+        href='/'
+        class='border-2 border-border bg-foreground px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[0.05em] text-secondary'
+      >
+        characters
+      </a>
+    </nav>
+  </div>
+  <div class='h-1 bg-primary'></div>
 </header>

@@ -21,4 +21,20 @@ describe('SearchInput', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Clear search' }))
     expect(onSearch).toHaveBeenCalledWith('')
   })
+
+  it('reflects a changed defaultValue prop (e.g. suggestion clicks)', () => {
+    const onSearch = vi.fn()
+    const { rerender } = render(
+      <SearchInput onSearch={onSearch} placeholder='Search' />
+    )
+    const input = screen.getByPlaceholderText<HTMLInputElement>('Search')
+    rerender(
+      <SearchInput
+        onSearch={onSearch}
+        placeholder='Search'
+        defaultValue='thor'
+      />
+    )
+    expect(input.value).toBe('thor')
+  })
 })

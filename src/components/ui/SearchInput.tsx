@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Search, X } from 'lucide-react'
 
 export const SearchInput = ({
@@ -13,6 +13,9 @@ export const SearchInput = ({
   className?: string
 }) => {
   const [value, setValue] = useState(defaultValue)
+  useEffect(() => {
+    setValue(defaultValue)
+  }, [defaultValue])
   const submit = () => onSearch(value.trim())
   return (
     <div className={`relative ${className}`}>

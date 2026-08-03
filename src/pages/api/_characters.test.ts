@@ -87,6 +87,11 @@ describe('GET /api/characters', () => {
       others: 3
     })
     expect(body.results).toHaveLength(9)
+    expect(vi.mocked(fetchCharacters)).toHaveBeenCalledWith({
+      query: 'a',
+      page: 0,
+      limit: 100
+    })
   })
 
   it('filters by heroes alignment and paginates', async () => {

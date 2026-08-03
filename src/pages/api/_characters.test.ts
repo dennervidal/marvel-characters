@@ -164,6 +164,27 @@ describe('GET /api/characters', () => {
     expect((await filtered.json()).counts.heroes).toBe(4)
   })
 
+  it('defaults to 12 results per page', async () => {
+    const many = Array.from({ length: 13 }, (_, i) =>
+      hero({ id: String(i + 1), name: `Hero ${i + 1}` })
+    )
+    vi.mocked(fetchCharacters).mockResolvedValue({
+      results: many,
+      total: many.length
+    })
+    const first = await GET({
+      request: request({ q: 'a', page: '1' })
+    } as never)
+    const firstBody = await first.json()
+    expect(firstBody.results).toHaveLength(12)
+    expect(firstBody.total).toBe(2)
+    const second = await GET({
+      request: request({ q: 'a', page: '2' })
+    } as never)
+    const secondBody = await second.json()
+    expect(secondBody.results).toHaveLength(1)
+  })
+
   it('returns 502 on upstream failure', async () => {
     vi.mocked(fetchCharacters).mockRejectedValue(new Error('boom'))
     const response = await GET({ request: request({ q: 'a' }) } as never)

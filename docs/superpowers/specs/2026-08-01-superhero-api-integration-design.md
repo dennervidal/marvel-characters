@@ -79,7 +79,7 @@ Verified API facts (2026-08-01, live calls):
    Marvel-specific); `marvel-client.ts` → `heroes-client.ts`.
 8. **Env**: `TOKEN` runtime-required, read only server-side via
    `import.meta.env.TOKEN`. Build stays env-free; CI unchanged; Cloudflare
-   Pages gets `TOKEN` as an env var.
+   Workers gets `TOKEN` as a secret binding.
 
 ## Architecture
 

@@ -9,7 +9,7 @@ no comics data; images are superherodb portraits.
 
 ## stack
 
-- Astro 7 — static output on the Cloudflare Pages adapter, pages in `src/pages/`
+- Astro 7 — static output on the Cloudflare Workers adapter, pages in `src/pages/`
 - React 19 islands with `client:*` directives, TanStack Query v5 for client-side data fetching
 - Tailwind CSS v4 — CSS-first design tokens via `@theme` in `src/styles/global.css` (no config file)
 - Vitest + Testing Library, ESLint 10 (flat config), Prettier 3, TypeScript 6 (strict)
@@ -18,8 +18,8 @@ no comics data; images are superherodb portraits.
 ## getting started
 
 Copy `.env.example` to `.env` and set `API_TOKEN` — a 32-character SuperHero API key from
-<https://superheroapi.com/>. It is required at runtime (dev server and the Cloudflare Pages environment
-variable), **not** at build: `pnpm run build` works without it.
+<https://superheroapi.com/>. It is required at runtime — local `.env` for `pnpm run dev`, the Cloudflare
+Workers `API_TOKEN` secret binding in production — **not** at build: `pnpm run build` works without it.
 
 ```bash
 pnpm install
@@ -56,10 +56,17 @@ pnpm run dev
 Tests are colocated as `*.test.tsx` next to the code. Component tests render inside Testing Library + jest-dom
 (`src/test/setup.ts`); `.astro` components are tested with the Astro container API.
 
-## deploy (Cloudflare Pages)
+## deploy (Cloudflare Workers)
 
-- Build command: `pnpm run build`
-- Output directory: `dist/`
-- Runtime: Node 24
-- Set `API_TOKEN` (the SuperHero API key) as a Cloudflare Pages environment variable. Details pages render
-  on-demand and are edge-cached by Cloudflare; `/api/characters` also needs `API_TOKEN` at runtime.
+The app runs as a Cloudflare Worker (`@astrojs/cloudflare`); `pnpm run build` emits
+`dist/server/wrangler.json`, and deploys are manual `wrangler` commands against that config:
+
+- Build: `pnpm run build`
+- Set the API key once per Worker: `wrangler secret put API_TOKEN` — a Workers secret binding shared
+  by every deployed version and preview, read at runtime via `astro:env` (never inlined into the build)
+- Branch previews: `wrangler versions upload --config dist/server/wrangler.json --preview-alias <branch>`
+  → `<branch>-marvel-characters.denner-vidal.workers.dev`
+- Production rollout: `wrangler versions deploy <version-id> --config dist/server/wrangler.json`
+
+Details pages render on-demand and are edge-cached by Cloudflare; `/api/characters` also uses
+`API_TOKEN` at runtime.

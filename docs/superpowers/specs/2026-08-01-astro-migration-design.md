@@ -45,7 +45,7 @@ used at build time).
 
 ## Decisions (from Q&A)
 
-1. **Hosting**: Cloudflare (Pages + Workers runtime via `@astrojs/cloudflare`).
+1. **Hosting**: Cloudflare Workers (via `@astrojs/cloudflare`).
 2. **Output mode**: `output: 'hybrid'` — pages prerendered by default, API
    routes on-demand, details page prerendered with fallback for unknown ids.
 3. **Client data fetching**: single React island on home using TanStack Query
@@ -150,7 +150,7 @@ limit: PAGE_LIMIT})` (signed, server-side) → `initialData` + `total` props.
 **Env vars** (Astro `import.meta.env`)
 
 - `PUBLIC_MARVEL_API_KEY` — public, inlined (was `NEXT_PUBLIC_API_PUBLIC_KEY`).
-- `MARVEL_PRIVATE_KEY` — server-only, never inlined; set as a Cloudflare Pages
+- `MARVEL_PRIVATE_KEY` — server-only, never inlined; set as a Cloudflare Workers
   secret. Both required at build time (details prerendering + CI build).
 
 ### Design system (Tailwind v4, CSS-first)
@@ -246,7 +246,7 @@ limit: PAGE_LIMIT})` (signed, server-side) → `initialData` + `total` props.
 7. **Shell + cleanup**: MainLayout, Appbar, ErrorBoundary, `useMobile`,
    delete obsolete hooks/context/styles, port remaining tests.
 8. **Docs + final verification**: README, AGENTS.md, .gitignore, env docs,
-   full lint/typecheck/test/build, deploy notes for Cloudflare Pages.
+   full lint/typecheck/test/build, deploy notes for Cloudflare Workers.
 
 ## Risks & Mitigations
 

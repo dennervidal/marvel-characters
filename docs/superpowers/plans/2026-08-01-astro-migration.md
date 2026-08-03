@@ -2266,7 +2266,12 @@ git commit -m "feat: add appbar and error boundary shell"
 
 - [ ] **Step 1: Rewrite README.md**
 
-Cover: stack (Astro 7, React 19 islands, Tailwind v4 design system, TanStack Query v5, Vitest, ESLint 10, Prettier 3, TypeScript, Node 24, pnpm), setup (no env vars required — data comes from the built-in mock provider until the SuperHero API integration lands; `TOKEN` in `.env` is reserved for that), commands (`pnpm run dev|build|preview|test|test:ci|lint|typecheck`), folder structure (layouts, pages, lib/marvel, components/ui, hooks, styles), testing notes, and **Cloudflare Pages deploy**: build command `pnpm run build`, output directory `dist/`, **no env vars needed** (mock provider; add `TOKEN` only when the follow-up plan lands), Node 24.
+Cover: stack (Astro 7, React 19 islands, Tailwind v4 design system, TanStack Query v5, Vitest, ESLint 10, Prettier 3,
+TypeScript, Node 24, pnpm), setup (no env vars required — data comes from the built-in mock provider until the SuperHero
+API integration lands; `TOKEN` in `.env` is reserved for that), commands (
+`pnpm run dev|build|preview|test|test:ci|lint|typecheck`), folder structure (layouts, pages, lib/marvel, components/ui,
+hooks, styles), testing notes, and **Cloudflare Workers deploy**: build command `pnpm run build`, output directory
+`dist/`, **no env vars needed** (mock provider; add `TOKEN` only when the follow-up plan lands), Node 24.
 
 - [ ] **Step 2: Rewrite AGENTS.md**
 
